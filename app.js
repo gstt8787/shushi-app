@@ -579,7 +579,7 @@ function renderBetScreen() {
       var sn = r.senshu[si];
       var srow = el('div', 'senshu-row');
       srow.appendChild(el('span', 'kumi-chip tb' + sn.waku, String(sn.waku)));
-      srow.appendChild(el('span', 'senshu-name', sn.name || '—'));
+      srow.appendChild(el('span', 'senshu-name', (sn.name || '—') + (sn.joshi ? '♀' : '')));
       srow.appendChild(el('span', 'senshu-kyu', sn.kyu || '—'));
       srow.appendChild(el('span', 'senshu-pt', scoreStr(sn.pt)));
       sbox.appendChild(srow);
