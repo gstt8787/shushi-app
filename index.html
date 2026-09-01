@@ -153,6 +153,34 @@
     <p class="mini-note notice-text"></p>
   </section>
 
+  <!-- ============ 画面G: 管理（管理者のみ・タブ自体を一般には非表示） ============ -->
+  <section id="screen-kanri" class="screen hidden">
+    <div class="screen-title">管理 <span class="step-chip">管理者のみ</span></div>
+
+    <div class="kanri-filters">
+      <div class="kanri-seg" id="kanri-period">
+        <button type="button" data-period="today">今日</button>
+        <button type="button" data-period="week" class="active">今週</button>
+        <button type="button" data-period="month">今月</button>
+        <button type="button" data-period="all">通算</button>
+      </div>
+      <div class="kanri-seg" id="kanri-view">
+        <button type="button" data-view="jin" class="active">人別</button>
+        <button type="button" data-view="race">レース別</button>
+      </div>
+    </div>
+
+    <div id="kanri-summary" class="home-card"></div>
+    <div id="kanri-sort-row" class="kanri-sort-row"></div>
+    <div id="kanri-body"></div>
+
+    <div id="kanri-kojin" class="hidden">
+      <button type="button" id="kanri-kojin-back" class="back-btn">← 一覧へ戻る</button>
+      <div id="kanri-kojin-body"></div>
+    </div>
+    <p class="mini-note notice-text"></p>
+  </section>
+
   <!-- ============ 画面F: 週間 ============ -->
   <section id="screen-week" class="screen hidden">
     <div class="screen-title">週間</div>
@@ -206,6 +234,7 @@
   <button type="button" data-tab="input"><span class="tab-icon">✏️</span>入力</button>
   <button type="button" data-tab="kiroku"><span class="tab-icon">📋</span>記録</button>
   <button type="button" data-tab="week"><span class="tab-icon">📅</span>週間</button>
+  <button type="button" data-tab="kanri" id="tab-kanri" class="hidden"><span class="tab-icon">🛡️</span>管理</button>
 </nav>
 
 <script src="config.js"></script>

@@ -81,6 +81,96 @@ button {
   cursor: pointer;
 }
 
+/* ---------- 画面G: 管理（管理者のみ） ---------- */
+.kanri-filters { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+.kanri-seg { display: flex; gap: 6px; flex-wrap: wrap; }
+.kanri-seg button {
+  flex: 1;
+  min-height: 34px;
+  padding: 6px 10px;
+  border: 1px solid var(--line, #d5dbe3);
+  border-radius: 17px;
+  background: #fff;
+  font-size: 13px;
+  color: #445;
+}
+.kanri-seg button.active { background: #12263a; color: #fff; border-color: #12263a; font-weight: 600; }
+.kanri-sort-row { display: flex; align-items: center; gap: 6px; margin: 10px 2px 8px; }
+.kanri-sort-label { font-size: 12px; color: #667; }
+.kanri-sort-btn {
+  min-height: 30px;
+  padding: 4px 12px;
+  border: 1px solid var(--line, #d5dbe3);
+  border-radius: 15px;
+  background: #fff;
+  font-size: 12px;
+  color: #445;
+}
+.kanri-sort-btn.active { background: #2c5c8f; color: #fff; border-color: #2c5c8f; font-weight: 600; }
+.kanri-card {
+  background: #fff;
+  border: 1px solid var(--line, #d5dbe3);
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 10px;
+}
+.kanri-card.tap { cursor: pointer; }
+.kanri-card-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.kanri-name { font-size: 15px; font-weight: 700; }
+.kanri-money { font-size: 16px; font-weight: 700; white-space: nowrap; }
+.kanri-money.plus { color: #1a7f4b; }
+.kanri-money.minus { color: #c0392b; }
+.kanri-sub { font-size: 12px; color: #667; margin-top: 6px; line-height: 1.5; }
+.kanri-tap-hint { font-size: 11px; color: #99a; text-align: right; margin-top: 4px; }
+.kanri-race-badge {
+  font-size: 11px;
+  color: #445;
+  background: #eef2f7;
+  border-radius: 10px;
+  padding: 3px 10px;
+  white-space: nowrap;
+}
+.kanri-race-badge.all { background: #e1f0e6; color: #1a7f4b; font-weight: 700; }
+.kanri-race-line {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  border-top: 1px dashed #e3e8ef;
+  padding: 7px 0 2px;
+  margin-top: 7px;
+  font-size: 13px;
+}
+.kanri-race-user { font-weight: 600; min-width: 64px; }
+.kanri-race-desc { flex: 1; color: #334; word-break: break-all; }
+.kanri-meisai {
+  background: #fff;
+  border: 1px solid var(--line, #d5dbe3);
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+}
+.kanri-meisai-l1 { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.kanri-meisai-race { font-size: 13px; font-weight: 600; }
+.kanri-meisai-l2 { font-size: 12px; color: #445; margin-top: 5px; line-height: 1.6; word-break: break-all; }
+.kanri-meisai-status { font-size: 11px; border-radius: 10px; padding: 2px 9px; white-space: nowrap; }
+.kanri-meisai-status.st-hit { background: #e1f0e6; color: #1a7f4b; font-weight: 700; }
+.kanri-meisai-status.st-miss { background: #fdeaea; color: #c0392b; }
+.kanri-meisai-status.st-skip { background: #eef1f5; color: #667; }
+.kanri-meisai-status.st-wait { background: #fdf3e0; color: #a06a00; }
+.kanri-kk-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff;
+  border: 1px solid var(--line, #d5dbe3);
+  border-radius: 10px;
+  padding: 9px 12px;
+  margin-bottom: 6px;
+  font-size: 12px;
+}
+.kanri-kk-name { font-weight: 700; font-size: 13px; min-width: 74px; }
+.kanri-kk-stats { flex: 1; color: #556; }
+
 /* ---------- 全体レイアウト ---------- */
 .content {
   max-width: 480px;

@@ -82,7 +82,13 @@ var S = {
   kaimoku: null,         // 買い目行 [{kumiban, kingaku, checked}]（買い方選択で生成）
   kingaku: null,         // 最後に一括適用したプリセット（ボタンの選択表示用）
   tenji: null,           // 画面Dの回答（登録前の一時保持）
-  outsideJcd: '01'       // リスト外モーダルの場選択
+  outsideJcd: '01',      // リスト外モーダルの場選択
+  kanri: {               // 画面G: 管理（管理者のみ）
+    period: 'week',      // today / week / month / all
+    view: 'jin',         // jin（人別）/ race（レース別）
+    sort: 'shushi',      // 人別の並び: shushi / kounyuu / kaishu
+    kojinId: null        // 個人詳細で開いている users.id（null=一覧）
+  }
 };
 
 function $(id) { return document.getElementById(id); }
@@ -193,6 +199,7 @@ function renderAll() {
   renderBetScreen();
   renderKiroku();
   renderWeek();
+  renderKanri();
   renderTabs();
 }
 
@@ -201,7 +208,10 @@ function renderTabs() {
   for (var i = 0; i < tabs.length; i++) {
     tabs[i].classList.toggle('active', tabs[i].dataset.tab === S.tab);
   }
-  var views = { home: 'screen-home', input: 'screen-input', kiroku: 'screen-kiroku', week: 'screen-week' };
+  var isAdmin = Storage.getCurrentUser().role === 'admin';
+  var kanriTab = $('tab-kanri');
+  if (kanriTab) { kanriTab.classList.toggle('hidden', !isAdmin); }
+  var views = { home: 'screen-home', input: 'screen-input', kiroku: 'screen-kiroku', week: 'screen-week', kanri: 'screen-kanri' };
   for (var k in views) {
     if (Object.prototype.hasOwnProperty.call(views, k)) {
       $(views[k]).classList.toggle('hidden', S.tab !== k);
@@ -1111,6 +1121,261 @@ function renderWeek() {
   });
 }
 
+// ---- 画面G: 管理（管理者のみ・全員の明細を見る） ----
+
+// 今月（デモ日と同じ年月）で絞る
+function filterMonth(bets) {
+  var ym = Storage.getDemoDate().slice(0, 7);
+  return bets.filter(function (b) { return b.race_date.slice(0, 7) === ym; });
+}
+
+function kanriFilter(bets) {
+  if (S.kanri.period === 'today') { return Storage.filterToday(bets); }
+  if (S.kanri.period === 'week') { return Storage.filterWeek(bets); }
+  if (S.kanri.period === 'month') { return filterMonth(bets); }
+  return bets;
+}
+
+function kanriPeriodLabel() {
+  return { today: '今日', week: '今週', month: '今月', all: '通算' }[S.kanri.period] || '';
+}
+
+function statusClass(st) {
+  return st === '的中' ? 'hit' : st === '外れ' ? 'miss' : st === '見送り' ? 'skip' : 'wait';
+}
+
+function kanriStatGrid(sum) {
+  var st = el('div', 'week-stats');
+  [['購入（確定分）', yen(sum.kounyuu)], ['払戻', yen(sum.haraimodoshi)],
+   ['的中率', pct(sum.tekichuritsu)], ['回収率', pct(sum.kaishuritsu)],
+   ['結果待ち', yen(sum.pending_kingaku)], ['入力件数', sum.n + '件'],
+   ['うち見送り', sum.miokuri + '件']].forEach(function (p) {
+    var s = el('div', 'stat');
+    s.appendChild(el('div', 'stat-label', p[0]));
+    s.appendChild(el('div', 'stat-val', p[1]));
+    st.appendChild(s);
+  });
+  return st;
+}
+
+function renderKanri() {
+  var box = $('kanri-body');
+  if (!box) { return; }
+  var isAdmin = Storage.getCurrentUser().role === 'admin';
+  if (!isAdmin) {
+    if (S.tab === 'kanri') { S.tab = 'home'; }
+    return;
+  }
+
+  var pbs = document.querySelectorAll('#kanri-period button');
+  for (var i = 0; i < pbs.length; i++) { pbs[i].classList.toggle('active', pbs[i].dataset.period === S.kanri.period); }
+  var vbs = document.querySelectorAll('#kanri-view button');
+  for (var j = 0; j < vbs.length; j++) { vbs[j].classList.toggle('active', vbs[j].dataset.view === S.kanri.view); }
+
+  var all = kanriFilter(Storage.listBets({}));
+  var users = Storage.getUsers();
+
+  var sm = $('kanri-summary');
+  clear(sm);
+  var sum = Storage.summarize(all);
+  var active = {};
+  all.forEach(function (b) { active[b.user_id] = true; });
+  sm.appendChild(el('div', 'home-label',
+    kanriPeriodLabel() + 'の全体（メンバー' + users.length + '人・記録あり' + Object.keys(active).length + '人）'));
+  sm.appendChild(el('div', 'big-money ' + signCls(sum.shushi), signedYen(sum.shushi)));
+  sm.appendChild(kanriStatGrid(sum));
+
+  var kojinBox = $('kanri-kojin');
+  var sortRow = $('kanri-sort-row');
+  if (S.kanri.kojinId != null) {
+    box.classList.add('hidden');
+    sortRow.classList.add('hidden');
+    kojinBox.classList.remove('hidden');
+    renderKanriKojin(all);
+    return;
+  }
+  box.classList.remove('hidden');
+  kojinBox.classList.add('hidden');
+  clear(box);
+
+  if (S.kanri.view === 'jin') {
+    sortRow.classList.remove('hidden');
+    renderKanriJin(box, sortRow, all, users);
+  } else {
+    sortRow.classList.add('hidden');
+    renderKanriRace(box, all, users);
+  }
+}
+
+// 人別ビュー: 1人1カード（タップで個人詳細）
+function renderKanriJin(box, sortRow, all, users) {
+  clear(sortRow);
+  sortRow.appendChild(el('span', 'kanri-sort-label', '並び:'));
+  [['shushi', '収支'], ['kounyuu', '購入額'], ['kaishu', '回収率']].forEach(function (p) {
+    sortRow.appendChild(btn('kanri-sort-btn' + (S.kanri.sort === p[0] ? ' active' : ''), p[1], function () {
+      S.kanri.sort = p[0]; renderKanri();
+    }));
+  });
+
+  var rows = users.map(function (us) {
+    var mine = all.filter(function (b) { return b.user_id === us.id; });
+    return { u: us, s: Storage.summarize(mine) };
+  });
+  rows.sort(function (a, b) {
+    if (S.kanri.sort === 'kounyuu') { return b.s.kounyuu - a.s.kounyuu; }
+    if (S.kanri.sort === 'kaishu') { return (b.s.kaishuritsu || 0) - (a.s.kaishuritsu || 0); }
+    return b.s.shushi - a.s.shushi;
+  });
+
+  rows.forEach(function (r) {
+    var card = el('div', 'kanri-card tap');
+    var head = el('div', 'kanri-card-head');
+    var nm = el('span', 'kanri-name', r.u.name);
+    if (r.u.role === 'admin') { nm.appendChild(el('span', 'role-mini', '管理者')); }
+    head.appendChild(nm);
+    head.appendChild(el('span', 'kanri-money ' + signCls(r.s.shushi), signedYen(r.s.shushi)));
+    card.appendChild(head);
+    card.appendChild(el('div', 'kanri-sub',
+      '購入 ' + yen(r.s.kounyuu) + '・的中率 ' + pct(r.s.tekichuritsu) +
+      '・回収率 ' + pct(r.s.kaishuritsu) + '・入力 ' + r.s.n + '件（見送り' + r.s.miokuri + '）'));
+    card.appendChild(el('div', 'kanri-tap-hint', 'タップで明細 →'));
+    card.addEventListener('click', function () {
+      S.kanri.kojinId = r.u.id;
+      renderKanri();
+      window.scrollTo(0, 0);
+    });
+    box.appendChild(card);
+  });
+}
+
+// レース別ビュー: 1レース1カード（誰が何にいくら賭けたかの逆引き）
+function renderKanriRace(box, all, users) {
+  var uname = {};
+  users.forEach(function (us) { uname[us.id] = us.name; });
+  var groups = {};
+  var order = [];
+  all.forEach(function (b) {
+    var key = b.race_date + '|' + b.jcd + '|' + b.race_no;
+    if (!groups[key]) {
+      groups[key] = { date: b.race_date, jou: b.jou_name, no: b.race_no, bets: [] };
+      order.push(key);
+    }
+    groups[key].bets.push(b);
+  });
+  if (!order.length) {
+    box.appendChild(el('p', 'mini-note', kanriPeriodLabel() + 'の記録はありません'));
+    return;
+  }
+  order.sort(function (a, b) {
+    var ga = groups[a], gb = groups[b];
+    if (ga.date !== gb.date) { return ga.date < gb.date ? 1 : -1; }
+    if (ga.jou !== gb.jou) { return ga.jou < gb.jou ? -1 : 1; }
+    return ga.no - gb.no;
+  });
+  var memberN = users.length;
+  order.forEach(function (key) {
+    var g = groups[key];
+    var card = el('div', 'kanri-card');
+    var head = el('div', 'kanri-card-head');
+    head.appendChild(el('span', 'kanri-name', g.date + ' ' + g.jou + ' ' + g.no + 'R'));
+    var sanka = {};
+    var total = 0;
+    g.bets.forEach(function (b) {
+      if (b.status !== '見送り') { sanka[b.user_id] = true; total += b.kingaku; }
+    });
+    var sankaN = Object.keys(sanka).length;
+    head.appendChild(el('span',
+      'kanri-race-badge' + (memberN > 1 && sankaN >= memberN ? ' all' : ''),
+      (memberN > 1 && sankaN >= memberN ? '全員参加・' : '参加' + sankaN + '/' + memberN + '人・') + '計' + yen(total)));
+    card.appendChild(head);
+    g.bets.forEach(function (b) {
+      var line = el('div', 'kanri-race-line');
+      line.appendChild(el('span', 'kanri-race-user', uname[b.user_id] || '—'));
+      var desc;
+      if (b.status === '見送り') {
+        desc = '見送り';
+      } else {
+        desc = (b.kaikata || '—');
+        if (b.kaimoku && b.kaimoku.length) {
+          desc += ' ' + b.kaimoku.map(function (k) { return k.kumiban; }).join(',');
+        }
+        desc += '　' + yen(b.kingaku);
+        if (b.status === '的中') { desc += ' → 払戻' + yen(b.payout); }
+      }
+      line.appendChild(el('span', 'kanri-race-desc', desc));
+      line.appendChild(el('span', 'kanri-meisai-status st-' + statusClass(b.status), b.status));
+      card.appendChild(line);
+    });
+    box.appendChild(card);
+  });
+}
+
+// 個人詳細: 集計＋買い方別内訳＋全明細（買い目・掛金・結果まで）
+function renderKanriKojin(all) {
+  var body = $('kanri-kojin-body');
+  clear(body);
+  var us = Storage.getUser(S.kanri.kojinId);
+  if (!us || !us.id) { S.kanri.kojinId = null; renderKanri(); return; }
+  var mine = all.filter(function (b) { return b.user_id === us.id; });
+  var s = Storage.summarize(mine);
+
+  var head = el('div', 'home-card');
+  head.appendChild(el('div', 'home-label', us.name + (us.role === 'admin' ? '（管理者）' : '') + '・' + kanriPeriodLabel()));
+  head.appendChild(el('div', 'big-money ' + signCls(s.shushi), signedYen(s.shushi)));
+  head.appendChild(kanriStatGrid(s));
+  body.appendChild(head);
+
+  var kk = {};
+  mine.forEach(function (b) {
+    if (b.status === '見送り') { return; }
+    var key = b.kaikata || '不明';
+    if (!kk[key]) { kk[key] = { n: 0, kounyuu: 0, haraimodoshi: 0 }; }
+    kk[key].n++;
+    if (b.status === '結果待ち') { return; }
+    kk[key].kounyuu += b.kingaku;
+    kk[key].haraimodoshi += b.payout || 0;
+  });
+  var keys = Object.keys(kk);
+  if (keys.length) {
+    body.appendChild(el('div', 'section-label', '買い方別の内訳'));
+    keys.sort(function (a, b) { return kk[b].kounyuu - kk[a].kounyuu; });
+    keys.forEach(function (k) {
+      var d = kk[k];
+      var sh = d.haraimodoshi - d.kounyuu;
+      var row = el('div', 'kanri-kk-row');
+      row.appendChild(el('span', 'kanri-kk-name', k));
+      row.appendChild(el('span', 'kanri-kk-stats',
+        d.n + '件・購入 ' + yen(d.kounyuu) + '・回収率 ' + pct(d.kounyuu > 0 ? d.haraimodoshi / d.kounyuu : null)));
+      row.appendChild(el('span', 'kanri-money ' + signCls(sh), signedYen(sh)));
+      body.appendChild(row);
+    });
+  }
+
+  body.appendChild(el('div', 'section-label', '明細 ' + mine.length + '件（新しい順）'));
+  mine.forEach(function (b) {
+    var row = el('div', 'kanri-meisai');
+    var l1 = el('div', 'kanri-meisai-l1');
+    l1.appendChild(el('span', 'kanri-meisai-race', b.race_date + ' ' + b.jou_name + ' ' + b.race_no + 'R'));
+    l1.appendChild(el('span', 'kanri-meisai-status st-' + statusClass(b.status), b.status));
+    row.appendChild(l1);
+    var l2 = el('div', 'kanri-meisai-l2');
+    if (b.status === '見送り') {
+      l2.textContent = '見送り（0円）';
+    } else {
+      var parts = [b.kaikata || '—'];
+      if (b.kaimoku && b.kaimoku.length) {
+        parts.push(b.kaimoku.map(function (k) { return k.kumiban + '(' + yen(k.kingaku) + ')'; }).join(' '));
+      }
+      parts.push('計 ' + yen(b.kingaku));
+      if (b.status === '的中') { parts.push('払戻 ' + yen(b.payout)); }
+      l2.textContent = parts.join('　');
+    }
+    row.appendChild(l2);
+    body.appendChild(row);
+  });
+  if (!mine.length) { body.appendChild(el('p', 'mini-note', kanriPeriodLabel() + 'の記録はありません')); }
+}
+
 // ---- 結果取込（デモ）----
 function doImportResults() {
   // 演出用: 取込前に「結果待ち」だった記録を控える（データには触れない）
@@ -1219,6 +1484,28 @@ function init() {
   $('ios-hint-close').addEventListener('click', function () {
     Storage.setFlag('ios_hint_shown', true);
     $('ios-hint').classList.add('hidden');
+  });
+
+  // 画面G: 管理の期間・ビュー切替と個人詳細の戻る
+  var kanriPeriodBtns = document.querySelectorAll('#kanri-period button');
+  for (var kp = 0; kp < kanriPeriodBtns.length; kp++) {
+    kanriPeriodBtns[kp].addEventListener('click', function () {
+      S.kanri.period = this.dataset.period;
+      renderKanri();
+    });
+  }
+  var kanriViewBtns = document.querySelectorAll('#kanri-view button');
+  for (var kv = 0; kv < kanriViewBtns.length; kv++) {
+    kanriViewBtns[kv].addEventListener('click', function () {
+      S.kanri.view = this.dataset.view;
+      S.kanri.kojinId = null;
+      renderKanri();
+    });
+  }
+  $('kanri-kojin-back').addEventListener('click', function () {
+    S.kanri.kojinId = null;
+    renderKanri();
+    window.scrollTo(0, 0);
   });
   $('btn-demo-reset').addEventListener('click', function () {
     var self = this;
