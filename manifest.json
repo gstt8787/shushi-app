@@ -1,7 +1,7 @@
 {
-  "name": "ボートレース収支記録",
+  "name": "収支記録",
   "short_name": "収支記録",
-  "description": "レースの購入と収支を3タップで記録するアプリ（記録専用・モック版）",
+  "description": "レースの購入と収支を3タップで記録するアプリ（記録専用）",
   "lang": "ja",
   "start_url": "./index.html",
   "scope": "./",
