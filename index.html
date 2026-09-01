@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#12263a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="収支記録">
+<title>ボートレース収支記録（モック版）</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ログイン（本番モードのみ表示。storage_supabase.js が制御） -->
+<div id="login-screen" class="login-screen hidden">
+  <div class="login-box">
+    <div class="login-logo">🚤</div>
+    <div class="login-title">収支記録 ログイン</div>
+    <input id="login-email" type="email" autocomplete="username" placeholder="メールアドレス">
+    <input id="login-pass" type="password" autocomplete="current-password" placeholder="パスワード">
+    <button type="button" id="login-btn" class="primary-big">ログイン</button>
+    <p id="login-msg" class="login-msg"></p>
+  </div>
+</div>
+
+<!-- iPhone Safari 初回案内（PWA） -->
+<div id="ios-hint" class="ios-hint hidden">
+  <span>📱 ホーム画面に追加すると全画面で使えます: 共有ボタン → 「ホーム画面に追加」</span>
+  <button type="button" id="ios-hint-close" aria-label="閉じる">×</button>
+</div>
+
+<!-- ヘッダ（利用者切替はデモ用。本番はログインで置換） -->
+<header class="appbar">
+  <div class="appbar-left">
+    <div class="app-title">
+      <svg class="logo-boat" viewBox="0 0 52 30" aria-hidden="true" focusable="false">
+        <path d="M2 21 L44 21 L50 14 L30 16 L8 16 Q3 16 2 21 Z" fill="#ffffff"/>
+        <path d="M13 16 Q19.5 5.5 26 16 Z" fill="#ffffff"/>
+        <path d="M3.5 20.9 L44.1 20.9 L46 18.6 L5 18.6 Q3.9 18.6 3.5 20.9 Z" fill="#d63a30" opacity="0.9"/>
+        <circle cx="5" cy="25" r="2" fill="#9fc5ee" opacity="0.8"/>
+        <circle cx="10" cy="26.5" r="1.4" fill="#9fc5ee" opacity="0.55"/>
+        <path d="M0 27 Q6 24.6 13 27 T26 27 T39 27 T52 27" stroke="#9fc5ee" stroke-width="1.6" fill="none" opacity="0.55"/>
+      </svg>
+      収支記録
+    </div>
+    <div id="demo-date" class="demo-date"></div>
+  </div>
+  <button type="button" id="user-switch" class="user-switch"></button>
+  <svg class="appbar-wave" viewBox="0 0 375 12" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+    <path d="M0 8 Q31 3 62 8 T125 8 T187 8 T250 8 T312 8 T375 8 V12 H0 Z" fill="rgba(255,255,255,0.09)"/>
+    <path d="M0 10 Q31 6 62 10 T125 10 T187 10 T250 10 T312 10 T375 10 V12 H0 Z" fill="rgba(255,255,255,0.13)"/>
+  </svg>
+</header>
+
+<main class="content">
+
+  <!-- ============ 画面A: ホーム ============ -->
+  <section id="screen-home" class="screen">
+    <div class="home-card">
+      <svg class="card-wave" viewBox="0 0 560 70" preserveAspectRatio="xMidYMax slice" aria-hidden="true" focusable="false">
+        <g class="wave-boat" opacity="0.13">
+          <path d="M270 56 L312 56 L318 49 L298 51 L276 51 Q271 51 270 56 Z" fill="#12263a"/>
+          <path d="M281 51 Q287.5 40.5 294 51 Z" fill="#12263a"/>
+        </g>
+        <path d="M0 44 Q40 36 80 44 T160 44 T240 44 T320 44 T400 44 T480 44 T560 44 V70 H0 Z" fill="rgba(22,104,184,0.07)"/>
+        <path d="M0 55 Q40 48 80 55 T160 55 T240 55 T320 55 T400 55 T480 55 T560 55 V70 H0 Z" fill="rgba(22,104,184,0.1)"/>
+      </svg>
+      <div class="home-label">本日の収支（確定分）</div>
+      <div id="home-today" class="big-money zero">±0円</div>
+      <div id="home-pending" class="pending-note hidden">⏳ 結果待ち 0円（0件）＝確定後に反映</div>
+      <div class="home-label home-label2">通算収支</div>
+      <div id="home-total" class="big-money2 zero">±0円</div>
+      <div class="home-subrow">
+        <div class="home-subcell">
+          <div class="home-sublabel">今週収支</div>
+          <div id="home-week" class="sub-money zero">±0円</div>
+        </div>
+        <div class="home-subcell">
+          <div class="home-sublabel">今日の入力</div>
+          <div id="home-count" class="sub-money zero">0件</div>
+        </div>
+        <div class="home-subcell">
+          <div class="home-sublabel">今日の購入額</div>
+          <div id="home-bet-total" class="sub-money zero">0円</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fun-row">
+      <div class="fun-card">
+        <div class="fun-label">🔥 連続的中</div>
+        <div id="fun-streak" class="fun-val">0<span class="fun-unit">連続</span></div>
+      </div>
+      <div class="fun-card">
+        <div class="fun-label">🎯 今週の的中</div>
+        <div id="fun-weekhit" class="fun-val">0<span class="fun-unit">本</span></div>
+      </div>
+    </div>
+
+    <button type="button" id="btn-nyuryoku" class="primary-big">入力する</button>
+    <button type="button" id="btn-import-home" class="secondary-btn">結果取込（デモ）</button>
+
+    <div class="notice-card">
+      <p class="notice-text"></p>
+    </div>
+    <button type="button" id="btn-demo-reset" class="ghost-btn">デモ記録を初期化</button>
+  </section>
+
+  <!-- ============ 入力タブ（画面B / 画面C） ============ -->
+  <section id="screen-input" class="screen hidden">
+
+    <!-- 画面B: レース選択（3タップの1タップ目） -->
+    <div id="view-race">
+      <div class="screen-title">レースを選ぶ <span class="step-chip">タップ1</span></div>
+      <p class="wind-note">⚠️ 風4〜5mは注意・6m以上は強警告（蒲郡・常滑・徳山は4mから）。当日の公式発表を確認</p>
+      <div id="race-list"></div>
+      <button type="button" id="btn-outside" class="secondary-btn">リスト外レースを入力</button>
+      <p class="mini-note notice-text"></p>
+    </div>
+
+    <!-- 画面C: 買い方と金額（2〜3タップ目） -->
+    <div id="view-bet" class="hidden">
+      <button type="button" id="bet-back" class="back-btn">← レース選択へ戻る</button>
+      <div id="bet-body"></div>
+
+      <div class="kingaku-free hidden" id="kingaku-free-row">
+        <label for="kingaku-custom">自由入力（チェック中へ一括）:</label>
+        <input type="number" id="kingaku-custom" inputmode="numeric" min="100" step="100" placeholder="金額（円）">
+      </div>
+
+      <button type="button" id="btn-tenji" class="secondary-btn">展示チェック票を付ける（任意）</button>
+      <div id="tenji-summary" class="tenji-summary hidden"></div>
+      <p id="bet-hint" class="bet-hint hidden"></p>
+
+      <div id="kaimoku-total" class="kaimoku-total hidden">合計 0点 0円</div>
+      <button type="button" id="bet-submit" class="primary-big" disabled>登録する</button>
+      <p class="mini-note notice-text"></p>
+    </div>
+  </section>
+
+  <!-- ============ 画面E: 記録一覧 ============ -->
+  <section id="screen-kiroku" class="screen hidden">
+    <div class="screen-title-row">
+      <div class="screen-title">記録一覧</div>
+      <button type="button" id="btn-import-kiroku" class="small-btn">結果取込（デモ）</button>
+    </div>
+    <p id="kiroku-scope" class="scope-note"></p>
+    <div id="kiroku-list"></div>
+    <p class="mini-note">結果確定前は「結果待ち」。単勝はデモ結果で実額突合・他券種は本番で自動突合されます。取消は当日分のみ。</p>
+    <p class="mini-note notice-text"></p>
+  </section>
+
+  <!-- ============ 画面F: 週間 ============ -->
+  <section id="screen-week" class="screen hidden">
+    <div class="screen-title">週間</div>
+    <p id="week-range" class="scope-note"></p>
+
+    <div id="week-minus-banner" class="minus-banner hidden">⚠️ 今週はマイナスです（隠さず向き合う週次レビューの材料）</div>
+
+    <div class="home-card">
+      <div class="home-label">今週の収支</div>
+      <div id="week-money" class="big-money zero">±0円</div>
+      <div id="week-wl" class="week-wl"></div>
+      <div id="week-stats" class="week-stats"></div>
+    </div>
+
+    <div id="week-users-label" class="section-label hidden">人別の内訳（管理者のみ）</div>
+    <div id="week-users"></div>
+    <p class="mini-note notice-text"></p>
+  </section>
+
+</main>
+
+<!-- ============ 画面D: 展示チェック票（モーダル・任意・全部スキップ可） ============ -->
+<div id="tenji-modal" class="modal hidden">
+  <div class="modal-sheet">
+    <div class="modal-title">展示チェック票（任意・各1タップ・全部飛ばしてOK）</div>
+    <div id="tenji-body"></div>
+    <div class="modal-actions">
+      <button type="button" id="tenji-skip" class="secondary-btn">スキップして閉じる</button>
+      <button type="button" id="tenji-apply" class="primary-btn">この内容で付ける</button>
+    </div>
+  </div>
+</div>
+
+<!-- リスト外レース入力（画面Bの補助入力） -->
+<div id="outside-modal" class="modal hidden">
+  <div class="modal-sheet">
+    <div class="modal-title">リスト外レースを入力</div>
+    <div id="outside-body"></div>
+    <div class="modal-actions">
+      <button type="button" id="outside-close" class="secondary-btn">閉じる</button>
+    </div>
+  </div>
+</div>
+
+<!-- トースト -->
+<div id="toast" class="toast"></div>
+
+<!-- 下部タブ: ホーム／入力／記録／週間 -->
+<nav class="tabbar">
+  <button type="button" data-tab="home" class="active"><span class="tab-icon">🏠</span>ホーム</button>
+  <button type="button" data-tab="input"><span class="tab-icon">✏️</span>入力</button>
+  <button type="button" data-tab="kiroku"><span class="tab-icon">📋</span>記録</button>
+  <button type="button" data-tab="week"><span class="tab-icon">📅</span>週間</button>
+</nav>
+
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="demo_data.js"></script>
+<script src="storage.js"></script>
+<script src="storage_supabase.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

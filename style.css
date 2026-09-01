@@ -1,0 +1,1330 @@
+/* 収支記録アプリ モック版 — スマホ最優先（375px基準）・タップ44px以上・数字大きく */
+
+:root {
+  --bg: #f2f4f7;
+  --card: #ffffff;
+  --ink: #1b2733;
+  --ink-sub: #5c6b7a;
+  --line: #dfe5ec;
+  --navy: #12263a;
+  --accent: #1668b8;
+  --green: #0f8a3c;
+  --green-bg: #e7f6ec;
+  --red: #d02f2f;
+  --red-bg: #fdecec;
+  --gray: #8a97a5;
+  --gold: #c9a227;
+  --gold-bg: #fdf6dd;
+  --tap: 44px;
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+button {
+  font-family: inherit;
+  -webkit-user-select: none;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+.hidden { display: none !important; }
+
+/* ---------- ヘッダ ---------- */
+.appbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 14px;
+  padding-top: calc(10px + env(safe-area-inset-top));
+  background: var(--navy);
+  color: #fff;
+}
+
+.app-title { font-size: 17px; font-weight: 700; }
+
+.demo-date { font-size: 11px; opacity: 0.75; }
+
+.user-switch {
+  min-height: var(--tap);
+  padding: 6px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ---------- 全体レイアウト ---------- */
+.content {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 14px 14px calc(86px + env(safe-area-inset-bottom));
+}
+
+.screen-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 4px 0 10px;
+}
+
+.screen-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.section-label {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink-sub);
+  margin: 18px 0 8px;
+}
+
+.group-label {
+  font-size: 15px;
+  font-weight: 700;
+  margin: 16px 0 8px;
+}
+
+.mini-note { font-size: 12px; color: var(--ink-sub); margin: 10px 0; }
+.empty-note { font-size: 14px; color: var(--ink-sub); padding: 24px 0; text-align: center; }
+.scope-note { font-size: 12px; color: var(--ink-sub); margin: 0 0 10px; }
+
+.step-chip {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+  background: var(--accent);
+  border-radius: 10px;
+  padding: 1px 8px;
+  vertical-align: 2px;
+}
+
+/* ---------- 画面A: ホーム ---------- */
+.home-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 18px 16px;
+  text-align: center;
+}
+
+.home-label { font-size: 13px; font-weight: 700; color: var(--ink-sub); }
+
+.big-money {
+  font-size: 44px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -1px;
+  margin: 6px 0 12px;
+}
+
+.sub-money { font-size: 17px; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+.plus { color: var(--green); }
+.minus { color: var(--red); }
+.zero { color: var(--gray); }
+
+.home-subrow {
+  display: flex;
+  border-top: 1px solid var(--line);
+  padding-top: 12px;
+}
+
+.home-subcell { flex: 1; }
+
+.home-sublabel { font-size: 11px; color: var(--ink-sub); margin-bottom: 2px; }
+
+.primary-big {
+  display: block;
+  width: 100%;
+  min-height: 60px;
+  margin: 16px 0 0;
+  border: 0;
+  border-radius: 16px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 20px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.primary-big:disabled { background: #b9c5d1; cursor: default; }
+
+.primary-big.miokuri { background: var(--gray); }
+
+.primary-btn {
+  min-height: var(--tap);
+  border: 0;
+  border-radius: 12px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  padding: 10px 16px;
+  cursor: pointer;
+}
+
+.secondary-btn {
+  display: block;
+  width: 100%;
+  min-height: 48px;
+  margin: 12px 0 0;
+  border: 1.5px solid var(--accent);
+  border-radius: 12px;
+  background: var(--card);
+  color: var(--accent);
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.small-btn {
+  min-height: var(--tap);
+  border: 1.5px solid var(--accent);
+  border-radius: 10px;
+  background: var(--card);
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 700;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.ghost-btn {
+  display: block;
+  margin: 18px auto 0;
+  min-height: var(--tap);
+  border: 0;
+  background: none;
+  color: var(--gray);
+  font-size: 12px;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.back-btn {
+  min-height: var(--tap);
+  border: 0;
+  background: none;
+  color: var(--accent);
+  font-size: 15px;
+  font-weight: 700;
+  padding: 6px 0;
+  cursor: pointer;
+}
+
+.notice-card {
+  margin-top: 18px;
+  background: #fff8e8;
+  border: 1px solid #ecd9a0;
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+
+.notice-card .notice-text { margin: 0; font-size: 12px; color: #7a6520; }
+
+.wind-note {
+  font-size: 12px;
+  color: #8a6d1a;
+  background: var(--gold-bg);
+  border: 1px solid #ecd9a0;
+  border-radius: 10px;
+  padding: 8px 10px;
+  margin: 0 0 6px;
+}
+
+/* ---------- 画面B: レース選択 ---------- */
+.race-btn {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 60px;
+  margin-bottom: 8px;
+  padding: 10px 12px;
+  border: 1.5px solid var(--line);
+  border-radius: 14px;
+  background: var(--card);
+  cursor: pointer;
+  text-align: left;
+}
+
+.race-btn:active { background: #eef4fb; }
+
+.race-main { display: flex; flex-direction: column; }
+
+.race-name { font-size: 18px; font-weight: 800; }
+
+.race-sub { font-size: 12px; color: var(--ink-sub); }
+
+.race-side { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+
+.tag {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 10px;
+  padding: 3px 10px;
+  border: 1.5px solid var(--line);
+  color: var(--ink-sub);
+  background: #f4f6f9;
+}
+
+/* 目印の色分け: 妙味=金縁 / 普通=通常 / 渋め=灰色 / 妙味薄=点線 */
+.race-btn.tag-myomi { border-color: var(--gold); box-shadow: 0 0 0 1px var(--gold); }
+.tag.tag-myomi { border-color: var(--gold); background: var(--gold-bg); color: #8a6d1a; }
+
+.race-btn.tag-shibume { border-color: #c3ccd6; background: #eceff3; }
+.tag.tag-shibume { border-color: #b7c1cc; background: #e2e7ed; color: #55636f; }
+
+.race-btn.tag-usui { border-style: dashed; }
+.tag.tag-usui { border-style: dashed; color: #7a8694; }
+
+.tag.tag-outside { background: #eef2f6; color: #55636f; }
+
+.warn-mini { font-size: 10px; color: var(--red); font-weight: 700; }
+
+/* 締切時刻（前日リストと同じ判断材料 2026-09-01。データに無ければ非表示） */
+.race-shime {
+  margin-left: 7px;
+  font-weight: 700;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.done-chip {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  padding: 1px 6px;
+}
+
+/* ---------- 画面C: 買い方と金額 ---------- */
+.bet-race-card {
+  background: var(--card);
+  border: 1.5px solid var(--line);
+  border-radius: 14px;
+  padding: 12px 14px;
+  margin-bottom: 4px;
+}
+
+.bet-race-card.tag-myomi { border-color: var(--gold); }
+.bet-race-card.tag-shibume { border-color: #c3ccd6; }
+.bet-race-card.tag-usui { border-style: dashed; }
+
+.bet-race-title { font-size: 20px; font-weight: 800; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+.bet-race-setsu { font-size: 12px; font-weight: 600; color: var(--ink-sub); }
+
+.bet-suisho { font-size: 13px; color: var(--ink-sub); margin-top: 6px; }
+
+/* 荒らし役スコア・一強度の行（前日リストと同じ判断材料 2026-09-01） */
+.bet-score-row {
+  font-size: 12px;
+  color: var(--ink-sub);
+  margin-top: 6px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 出走6艇の簡易表（誤入力防止: 前日リストと選手名を照合 2026-09-01） */
+.senshu-box {
+  margin-top: 8px;
+  border-top: 1px solid var(--line);
+  padding-top: 8px;
+}
+
+.senshu-head { font-size: 11px; font-weight: 700; color: var(--ink-sub); margin-bottom: 4px; }
+
+.senshu-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 1px 0;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.senshu-row .kumi-chip { width: 18px; height: 18px; font-size: 11px; flex: none; }
+
+.senshu-name {
+  flex: 1;
+  min-width: 0;
+  font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.senshu-kyu { font-size: 11px; font-weight: 700; color: var(--accent); flex: none; }
+
+.senshu-pt {
+  font-size: 12px;
+  color: var(--ink-sub);
+  font-variant-numeric: tabular-nums;
+  flex: none;
+  min-width: 38px;
+  text-align: right;
+}
+
+.warn-banner {
+  margin-top: 8px;
+  background: var(--red-bg);
+  color: var(--red);
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 8px 10px;
+}
+
+.info-banner {
+  margin-top: 8px;
+  background: #eef4fb;
+  color: #2b5f8f;
+  border-radius: 10px;
+  font-size: 13px;
+  padding: 8px 10px;
+}
+
+.kaikata-list { display: flex; flex-direction: column; gap: 8px; }
+
+.kaikata-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  min-height: 56px;
+  padding: 8px 12px;
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  background: var(--card);
+  cursor: pointer;
+  text-align: left;
+}
+
+.kaikata-btn.selected {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(22, 104, 184, 0.25);
+  background: #eef4fb;
+}
+
+.kaikata-name { font-size: 16px; font-weight: 800; display: flex; align-items: center; gap: 6px; }
+
+.kaikata-kumi { font-size: 11px; color: var(--ink-sub); text-align: right; max-width: 46%; }
+
+.rec-badge {
+  font-size: 10px;
+  font-weight: 800;
+  color: #fff;
+  background: var(--green);
+  border-radius: 8px;
+  padding: 2px 7px;
+}
+
+/* 買い方ボタン右下の想定回収率（4年実測・全買い時の土台。煽らない中立色） */
+.kaisyu-mini {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--ink-sub);
+  font-variant-numeric: tabular-nums;
+}
+
+.kingaku-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+  gap: 6px;
+}
+
+.kingaku-btn {
+  min-height: 52px;
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  background: var(--card);
+  font-size: 16px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.1;
+}
+
+.kingaku-btn .en { font-size: 10px; font-weight: 600; color: var(--ink-sub); }
+
+.kingaku-btn.selected {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(22, 104, 184, 0.25);
+  background: #eef4fb;
+}
+
+.kingaku-free {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.kingaku-free label { font-size: 13px; color: var(--ink-sub); white-space: nowrap; }
+
+.kingaku-free input {
+  flex: 1;
+  min-height: 48px;
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  padding: 0 12px;
+  font-size: 18px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  background: var(--card);
+  color: var(--ink);
+}
+
+.kingaku-free input:focus { outline: 2px solid var(--accent); border-color: var(--accent); }
+
+/* ---- 買い目チェック＋個別金額（2026-09-01改良） ---- */
+.kaimoku-list { display: flex; flex-direction: column; gap: 6px; }
+
+/* 選択中の買い方の直下に展開する一式ブロック（買い目〜登録・要望対応2026-09-01） */
+.kaimoku-inline {
+  margin: 2px 0 6px;
+  padding: 4px 10px 12px;
+  border-left: 3px solid var(--accent);
+  border-radius: 0 12px 12px 0;
+  background: rgba(22, 104, 184, 0.05);
+}
+.kaimoku-inline .section-label { margin-top: 10px; }
+.kaimoku-inline .kingaku-free { margin-top: 10px; }
+.kaimoku-inline .secondary-btn { margin-top: 10px; }
+
+.kaimoku-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 54px;
+  padding: 5px 10px;
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  background: var(--card);
+}
+
+.kaimoku-row.off { background: #eef1f5; opacity: 0.62; }
+
+.kaimoku-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-height: 44px;
+  cursor: pointer;
+}
+
+.kaimoku-check {
+  width: 22px;
+  height: 22px;
+  margin: 0;
+  flex: none;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.kaimoku-kumi { display: flex; align-items: center; gap: 2px; }
+
+.kaimoku-kumi .kumi-chip { width: 22px; height: 22px; font-size: 12px; border-radius: 6px; }
+
+.kumi-sep { font-size: 13px; font-weight: 800; color: var(--ink-sub); margin: 0 1px; }
+
+.kaimoku-kinwrap { display: flex; align-items: center; gap: 4px; flex: none; }
+
+.kaimoku-kin {
+  width: 96px;
+  min-height: 44px;
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  padding: 0 8px;
+  font-size: 16px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  background: var(--card);
+  color: var(--ink);
+}
+
+.kaimoku-kin:focus { outline: 2px solid var(--accent); border-color: var(--accent); }
+
+.kaimoku-kin:disabled { background: #e7ebf0; color: var(--gray); }
+
+.kaimoku-en { font-size: 12px; font-weight: 700; color: var(--ink-sub); }
+
+/* ---- 自由買い目（表示にない組番のイレギュラー記録 2026-09-01） ---- */
+.jiyuu-box {
+  margin-top: 8px;
+  background: var(--card);
+  border: 1.5px dashed var(--line);
+  border-radius: 12px;
+  padding: 10px;
+}
+
+.jiyuu-title { font-size: 12px; font-weight: 700; color: var(--ink-sub); margin-bottom: 6px; }
+
+.jiyuu-row { display: flex; align-items: center; gap: 6px; }
+
+.jiyuu-shubetsu {
+  flex: 1;
+  min-width: 0;
+  min-height: 44px;
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  background: var(--card);
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 0 4px;
+}
+
+.jiyuu-kumi,
+.jiyuu-kin {
+  min-height: 44px;
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  padding: 0 8px;
+  font-size: 15px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  background: var(--card);
+  color: var(--ink);
+}
+
+.jiyuu-kumi { width: 82px; }
+
+.jiyuu-kin { width: 74px; text-align: right; }
+
+.jiyuu-kumi:focus, .jiyuu-kin:focus, .jiyuu-shubetsu:focus {
+  outline: 2px solid var(--accent);
+  border-color: var(--accent);
+}
+
+.jiyuu-add {
+  min-height: 44px;
+  border: 1.5px solid var(--accent);
+  border-radius: 10px;
+  background: var(--card);
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 800;
+  padding: 0 12px;
+  cursor: pointer;
+}
+
+.jiyuu-tag {
+  font-size: 10px;
+  font-weight: 700;
+  color: #7a4a9e;
+  border: 1px solid #c9b3e2;
+  background: #f6f0fc;
+  border-radius: 8px;
+  padding: 1px 6px;
+  white-space: nowrap;
+}
+
+.jiyuu-del {
+  min-width: 36px;
+  min-height: 36px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f4f6f9;
+  color: var(--ink-sub);
+  font-size: 16px;
+  font-weight: 800;
+  cursor: pointer;
+  flex: none;
+}
+
+/* 合計バー: スクロールしても下部（タブバーの上）に常時見える */
+.kaimoku-total {
+  position: sticky;
+  bottom: calc(66px + env(safe-area-inset-bottom));
+  z-index: 10;
+  margin-top: 12px;
+  background: var(--navy);
+  color: #fff;
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 15px;
+  font-weight: 800;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  box-shadow: 0 6px 18px rgba(18, 38, 58, 0.28);
+}
+
+.tenji-summary {
+  margin-top: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--green);
+  background: var(--green-bg);
+  border-radius: 10px;
+  padding: 8px 10px;
+}
+
+.bet-hint { font-size: 13px; color: #8a6d1a; background: var(--gold-bg); border-radius: 10px; padding: 8px 10px; margin: 8px 0 0; }
+
+/* ---------- 画面D: 展示チェック票 & モーダル共通 ---------- */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: rgba(15, 25, 35, 0.55);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.modal-sheet {
+  width: 100%;
+  max-width: 480px;
+  max-height: 86vh;
+  overflow-y: auto;
+  background: var(--bg);
+  border-radius: 18px 18px 0 0;
+  padding: 16px 14px calc(16px + env(safe-area-inset-bottom));
+}
+
+.modal-title { font-size: 16px; font-weight: 800; margin-bottom: 12px; }
+
+.modal-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.modal-actions .secondary-btn { margin: 0; flex: 1; }
+.modal-actions .primary-btn { flex: 1; }
+
+.tenji-item {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+}
+
+.tenji-q { font-size: 14px; font-weight: 700; margin-bottom: 8px; }
+
+.tenji-choices { display: flex; flex-wrap: wrap; gap: 6px; }
+
+.chip {
+  min-height: var(--tap);
+  padding: 8px 14px;
+  border: 1.5px solid var(--line);
+  border-radius: 22px;
+  background: var(--card);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.chip.selected {
+  border-color: var(--accent);
+  background: #eef4fb;
+  color: var(--accent);
+  box-shadow: 0 0 0 1.5px rgba(22, 104, 184, 0.3);
+}
+
+.outside-jcd { display: flex; flex-wrap: wrap; gap: 6px; }
+.outside-rno { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.outside-rno .rno { border-radius: 12px; }
+
+/* ---------- 画面E: 記録一覧 ---------- */
+.kiroku-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+}
+
+.kiroku-title { font-size: 15px; font-weight: 800; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+
+.kiroku-kaikata { font-size: 12px; font-weight: 700; color: var(--accent); }
+
+.kiroku-sub { font-size: 11px; color: var(--ink-sub); margin-top: 2px; }
+
+/* 買い目内訳（kaimoku新形式の記録のみ小さく表示） */
+.kiroku-kaimoku {
+  font-size: 11px;
+  color: var(--ink-sub);
+  font-variant-numeric: tabular-nums;
+  margin-top: 1px;
+}
+
+.kiroku-side { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+
+.st-chip {
+  font-size: 13px;
+  font-weight: 800;
+  border-radius: 10px;
+  padding: 4px 10px;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.st-hit { color: var(--green); background: var(--green-bg); }
+.st-miss { color: var(--red); background: var(--red-bg); }
+.st-wait { color: var(--ink-sub); background: #f0f2f5; font-weight: 600; font-size: 11px; white-space: normal; text-align: right; }
+.st-skip { color: #55636f; background: #e8ecf1; }
+
+.user-chip {
+  font-size: 10px;
+  font-weight: 700;
+  color: #6b4fa3;
+  border: 1px solid #b7a4dd;
+  background: #f3eefc;
+  border-radius: 8px;
+  padding: 1px 6px;
+}
+
+.user-chip.me { color: var(--accent); border-color: #9dc0e2; background: #eef4fb; }
+
+.cancel-btn {
+  min-height: 32px;
+  border: 1px solid var(--red);
+  border-radius: 8px;
+  background: var(--card);
+  color: var(--red);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 10px;
+  cursor: pointer;
+}
+
+.cancel-btn.armed, .ghost-btn.armed {
+  background: var(--red);
+  color: #fff;
+  text-decoration: none;
+}
+
+/* ---------- 画面F: 週間 ---------- */
+.minus-banner {
+  background: var(--red-bg);
+  color: var(--red);
+  border: 1.5px solid #efb5b5;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 800;
+  padding: 10px 12px;
+  margin-bottom: 10px;
+}
+
+.week-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  border-top: 1px solid var(--line);
+  padding-top: 12px;
+}
+
+.stat-label { font-size: 11px; color: var(--ink-sub); }
+
+.stat-val { font-size: 16px; font-weight: 800; font-variant-numeric: tabular-nums; }
+
+.week-user-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 8px;
+}
+
+.week-user-name { font-size: 14px; font-weight: 800; display: flex; align-items: center; gap: 6px; }
+
+.role-mini {
+  font-size: 10px;
+  font-weight: 700;
+  color: #6b4fa3;
+  border: 1px solid #b7a4dd;
+  border-radius: 8px;
+  padding: 1px 6px;
+}
+
+.week-user-stats { font-size: 11px; color: var(--ink-sub); }
+
+.week-user-money { font-size: 16px; font-weight: 800; font-variant-numeric: tabular-nums; }
+
+/* ---------- タブバー ---------- */
+.tabbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 30;
+  display: flex;
+  background: var(--card);
+  border-top: 1px solid var(--line);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.tabbar button {
+  flex: 1;
+  min-height: 58px;
+  border: 0;
+  background: none;
+  color: var(--gray);
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  cursor: pointer;
+}
+
+.tabbar button.active { color: var(--accent); }
+
+.tab-icon { font-size: 20px; line-height: 1; }
+
+/* ---------- トースト・案内 ---------- */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(78px + env(safe-area-inset-bottom));
+  transform: translateX(-50%) translateY(20px);
+  z-index: 50;
+  max-width: 90%;
+  background: var(--navy);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 12px;
+  padding: 10px 16px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s, transform 0.25s;
+}
+
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+.ios-hint {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  background: #eaf3ff;
+  color: #14508c;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 8px 12px;
+}
+
+.ios-hint button {
+  min-width: var(--tap);
+  min-height: var(--tap);
+  border: 0;
+  background: none;
+  color: #14508c;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+/* ---------- PC対応（幅が広い時は中央寄せ・raceリスト2列） ---------- */
+@media (min-width: 768px) {
+  .content { max-width: 560px; }
+  .modal-sheet { max-width: 560px; border-radius: 18px; margin-bottom: 6vh; }
+  .modal { align-items: center; }
+}
+
+/* =====================================================================
+   遊び心（デザイン改修 2026-08-31）
+   艇番カラー・ボート/水面SVG・チケット/的中演出・ゲーム風の数字表示
+   ※機能・データには触れない見た目だけの層
+   ===================================================================== */
+
+/* ---------- 艇番カラー（公式: 1白/2黒/3赤/4青/5黄/6緑） ---------- */
+:root {
+  --tb1: #ffffff;
+  --tb2: #22262c;
+  --tb3: #d63a30;
+  --tb4: #1f6fd0;
+  --tb5: #f6c433;
+  --tb6: #18994f;
+}
+
+/* 展示チェック票の艇番チップ: 未選択=白地+艇番色の縁 / 選択=艇番色で塗る */
+.chip.tb { border-width: 2px; font-weight: 800; }
+.chip.tb1 { border-color: #aab5c1; color: #42505e; background: var(--tb1); }
+.chip.tb2 { border-color: #2a2e34; color: #22262c; }
+.chip.tb3 { border-color: var(--tb3); color: #c2352c; }
+.chip.tb4 { border-color: var(--tb4); color: #1b62b8; }
+.chip.tb5 { border-color: #dfb121; color: #8f7100; }
+.chip.tb6 { border-color: var(--tb6); color: #128044; }
+.chip.tb.selected { box-shadow: 0 0 0 2.5px rgba(18, 38, 58, 0.3); }
+.chip.tb1.selected { background: var(--tb1); border-color: #12263a; color: #12263a; }
+.chip.tb2.selected { background: var(--tb2); border-color: var(--tb2); color: #fff; }
+.chip.tb3.selected { background: var(--tb3); border-color: var(--tb3); color: #fff; }
+.chip.tb4.selected { background: var(--tb4); border-color: var(--tb4); color: #fff; }
+.chip.tb5.selected { background: var(--tb5); border-color: #d8ab1a; color: #553f00; }
+.chip.tb6.selected { background: var(--tb6); border-color: var(--tb6); color: #fff; }
+
+/* 買い方の組番に添える小さな艇番カラーチップ */
+.kaikata-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  max-width: 50%;
+}
+
+.kaikata-right .kaikata-kumi { max-width: none; }
+
+.kumi-chips { display: flex; gap: 3px; }
+
+.kumi-chip {
+  width: 17px;
+  height: 17px;
+  border-radius: 5px;
+  border: 1px solid transparent;
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.kumi-chip.tb1 { background: var(--tb1); border-color: #aab5c1; color: #42505e; }
+.kumi-chip.tb2 { background: var(--tb2); color: #fff; }
+.kumi-chip.tb3 { background: var(--tb3); color: #fff; }
+.kumi-chip.tb4 { background: var(--tb4); color: #fff; }
+.kumi-chip.tb5 { background: var(--tb5); color: #553f00; }
+.kumi-chip.tb6 { background: var(--tb6); color: #fff; }
+
+/* ---------- ヘッダのボートSVGと波 ---------- */
+.app-title { display: flex; align-items: center; gap: 7px; white-space: nowrap; }
+
+.logo-boat { width: 30px; height: 19px; flex: none; }
+
+.appbar-wave {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  width: 100%;
+  height: 9px;
+  pointer-events: none;
+}
+
+/* ---------- ホーム収支カードの水面モチーフ ---------- */
+.home-card {
+  position: relative;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.card-wave {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 64px;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.wave-boat { animation: boat-drift 16s ease-in-out infinite alternate; }
+
+@keyframes boat-drift {
+  from { transform: translateX(0) translateY(0); }
+  50%  { transform: translateX(22px) translateY(1.5px); }
+  to   { transform: translateX(44px) translateY(0); }
+}
+
+/* ---------- ゲーム風の数字カード（連続的中・今週の的中） ---------- */
+.fun-row { display: flex; gap: 10px; margin-top: 10px; }
+
+.fun-card {
+  flex: 1;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 10px 12px 8px;
+  text-align: center;
+}
+
+.fun-label { font-size: 11px; font-weight: 700; color: var(--ink-sub); }
+
+.fun-val {
+  font-size: 24px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  line-height: 1.2;
+  margin-top: 2px;
+}
+
+.fun-val .fun-unit { font-size: 12px; font-weight: 700; color: var(--ink-sub); margin-left: 2px; }
+
+.fun-val.hot { color: #a87f10; }
+
+/* ---------- 登録演出: 舟券風チケット（0.8秒以内・操作は妨げない） ---------- */
+.ticket-fx {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.ticket-card {
+  position: relative;
+  width: 248px;
+  background: #fffdf4;
+  border: 1.5px solid #d9c98f;
+  border-radius: 6px;
+  padding: 10px 14px 12px 58px;
+  box-shadow: 0 14px 34px rgba(18, 38, 58, 0.35);
+  overflow: hidden;
+  animation: ticket-fly 0.75s cubic-bezier(0.45, -0.05, 0.35, 1) forwards;
+}
+
+.ticket-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 44px;
+  border-left: 2px dashed #d9c98f;
+}
+
+.ticket-side {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  writing-mode: vertical-rl;
+  letter-spacing: 3px;
+  font-size: 10px;
+  font-weight: 800;
+  color: #8a6d1a;
+  background: #faf3da;
+}
+
+.ticket-head { font-size: 9px; font-weight: 800; letter-spacing: 2px; color: #b09a4e; }
+
+.ticket-race { font-size: 17px; font-weight: 800; color: var(--ink); margin-top: 1px; }
+
+.ticket-kaikata { font-size: 12px; font-weight: 700; color: var(--ink-sub); }
+
+.ticket-kin { font-size: 19px; font-weight: 800; font-variant-numeric: tabular-nums; color: var(--ink); margin-top: 2px; }
+
+.ticket-date { font-size: 10px; color: var(--ink-sub); margin-top: 1px; }
+
+.ticket-stamp {
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  width: 42px;
+  height: 42px;
+  border: 2.5px solid rgba(208, 47, 47, 0.75);
+  border-radius: 50%;
+  color: rgba(208, 47, 47, 0.85);
+  font-size: 12px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: rotate(-14deg);
+}
+
+@keyframes ticket-fly {
+  0%   { transform: translateY(30px) scale(0.65); opacity: 0; }
+  22%  { transform: translateY(0) scale(1); opacity: 1; }
+  58%  { transform: translateY(-6px) scale(1); opacity: 1; }
+  100% { transform: translateY(-46vh) scale(0.12); opacity: 0; }
+}
+
+/* ---------- 的中演出: バッジ＋紙吹雪（CSSのみ・2秒で消える） ---------- */
+.hit-flash {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 800;
+  color: #fff;
+  background: var(--green);
+  border-radius: 8px;
+  padding: 2px 8px;
+  animation: hit-pop 2s ease forwards;
+}
+
+@keyframes hit-pop {
+  0%   { transform: scale(0); opacity: 0; }
+  12%  { transform: scale(1.3); opacity: 1; }
+  22%  { transform: scale(1); }
+  78%  { opacity: 1; }
+  100% { transform: scale(0.9); opacity: 0; }
+}
+
+.confetti-box {
+  position: fixed;
+  inset: 0;
+  z-index: 55;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.cf {
+  position: absolute;
+  top: -18px;
+  width: 9px;
+  height: 14px;
+  border-radius: 2px;
+  animation: cf-fall 1.6s ease-in forwards;
+}
+
+/* 紙吹雪も艇番6色 */
+.cf:nth-child(6n+1) { background: #fff; border: 1px solid #b6c0cb; }
+.cf:nth-child(6n+2) { background: var(--tb2); }
+.cf:nth-child(6n+3) { background: var(--tb3); }
+.cf:nth-child(6n+4) { background: var(--tb4); }
+.cf:nth-child(6n+5) { background: var(--tb5); }
+.cf:nth-child(6n)   { background: var(--tb6); }
+
+@keyframes cf-fall {
+  0%   { transform: translate(0, -20px) rotate(0deg); opacity: 1; }
+  60%  { transform: translate(14px, 55vh) rotate(300deg); opacity: 1; }
+  100% { transform: translate(-8px, 104vh) rotate(560deg); opacity: 0; }
+}
+
+/* ---------- 週間: ゲームのリザルト風（負けは隠さない） ---------- */
+.week-wl { margin: 2px 0 12px; }
+
+.wl-head {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+}
+
+.wl-side { display: flex; flex-direction: column; align-items: center; min-width: 56px; }
+
+.wl-label { font-size: 11px; font-weight: 700; color: var(--ink-sub); }
+
+.wl-num { font-size: 27px; font-weight: 800; font-variant-numeric: tabular-nums; line-height: 1.15; }
+
+.wl-hit { color: var(--green); }
+
+.wl-miss { color: var(--red); }
+
+.wl-vs { font-size: 11px; font-weight: 800; letter-spacing: 1px; color: var(--gray); }
+
+.wl-dots { display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; margin-top: 9px; }
+
+.wl-dot { width: 12px; height: 12px; border-radius: 50%; flex: none; }
+
+.wl-dot.hit { background: var(--green); }
+.wl-dot.miss { background: var(--red); }
+.wl-dot.skip { background: #c3ccd6; }
+.wl-dot.wait { background: #fff; border: 1.5px solid #b9c5d1; }
+
+.wl-dot.mini { width: 8px; height: 8px; display: inline-block; vertical-align: middle; margin: 0 2px 1px 0; }
+
+.wl-legend { font-size: 10px; color: var(--ink-sub); text-align: center; margin-top: 6px; }
+
+/* ---------- 動きを減らす設定の人には演出を止める（数字と記録はそのまま） ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .wave-boat, .cf, .hit-flash { animation: none !important; }
+  .ticket-fx, .confetti-box { display: none !important; }
+}
+
+/* ---------- ログイン画面（本番モード・storage_supabase.jsが制御） ---------- */
+.login-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: var(--navy, #12263a);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.login-box {
+  width: 100%;
+  max-width: 360px;
+  background: var(--card, #fff);
+  border-radius: 18px;
+  padding: 28px 22px;
+  text-align: center;
+}
+.login-logo { font-size: 44px; margin-bottom: 6px; }
+.login-title { font-size: 18px; font-weight: 800; margin-bottom: 18px; }
+.login-box input {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: var(--tap, 44px);
+  border: 1.5px solid var(--line, #d6dde5);
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+.login-box .primary-big { width: 100%; margin-top: 4px; }
+.login-msg { font-size: 13px; color: var(--red, #c62828); min-height: 1.2em; margin: 10px 0 0; }
+
+/* ---------- ホーム: 通算収支の大表示＋結果待ちの別枠（要望対応2026-09-01） ---------- */
+.home-label2 { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); }
+.big-money2 {
+  font-size: 30px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.5px;
+  margin: 2px 0 10px;
+}
+.pending-note {
+  font-size: 13px;
+  font-weight: 700;
+  color: #8a6d1a;
+  background: var(--gold-bg);
+  border-radius: 10px;
+  padding: 7px 10px;
+  margin: 0 0 4px;
+}
