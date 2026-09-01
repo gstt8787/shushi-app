@@ -67,6 +67,17 @@ button {
   color: #fff;
   font-size: 13px;
   font-weight: 600;
+}
+
+/* ログイン中メールアドレスの小表示（本番モードのみ・renderHeaderが付与） */
+.user-switch .login-email-mini {
+  display: block;
+  font-size: 10px;
+  font-weight: 400;
+  opacity: 0.8;
+  margin-top: 2px;
+  word-break: break-all;
+  max-width: 180px;
   cursor: pointer;
 }
 

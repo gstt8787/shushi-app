@@ -27,7 +27,8 @@
   // ---- メモリ上のキャッシュ（モックの defaultData と同じ形＋races/results） ----
   var C = {
     users: [], bets: [], tenji: [], races: [], results: [],
-    current_user: null   // ログイン中の users.id
+    current_user: null,  // ログイン中の users.id
+    current_email: null  // ログイン中のメールアドレス（ヘッダー表示用）
   };
 
   function todayLocal() {
@@ -300,6 +301,8 @@
       summarize: summarize, weekStartOf: weekStartOf, addDays: addDays,
       filterToday: filterToday, filterWeek: filterWeek,
       getFlag: getFlag, setFlag: setFlag, resetAll: resetAll,
+      getCurrentEmail: function () { return C.current_email; },
+      realMode: true,  // 本番モード印（app.jsが利用者切替の無効化に使う）
       dateLabel: '本日'
     };
   })();
@@ -328,6 +331,7 @@
           return false;
         }
         C.current_user = me.id;
+        C.current_email = session.user.email || '';
         show(document.getElementById('login-screen'), false);
         if (typeof renderAll === 'function') { renderAll(); }
         return true;

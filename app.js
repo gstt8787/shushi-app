@@ -213,7 +213,15 @@ function renderTabs() {
 
 function renderHeader() {
   var u = Storage.getCurrentUser();
-  $('user-switch').textContent = '👤 ' + u.name + (u.role === 'admin' ? '（管理者）' : '（一般）');
+  var btn = $('user-switch');
+  btn.textContent = '👤 ' + u.name + (u.role === 'admin' ? '（管理者）' : '（一般）');
+  var mail = (typeof Storage.getCurrentEmail === 'function') ? Storage.getCurrentEmail() : null;
+  if (mail) {
+    var mini = document.createElement('span');
+    mini.className = 'login-email-mini';
+    mini.textContent = mail;
+    btn.appendChild(mini);
+  }
   $('demo-date').textContent = (Storage.dateLabel || 'デモ日') + ' ' + Storage.getDemoDate();
 }
 
@@ -1132,8 +1140,13 @@ function doImportResults() {
   renderAll();
 }
 
-// ---- 利用者切替（デモ用。本番はログインで置換）----
+// ---- 利用者切替（デモ用。本番＝realModeでは無効化し、ログイン中メアドの確認だけ出す）----
 function switchUser() {
+  if (Storage.realMode) {
+    var mail = (typeof Storage.getCurrentEmail === 'function' && Storage.getCurrentEmail()) || '';
+    toast('ログイン中: ' + mail);
+    return;
+  }
   var users = Storage.getUsers();
   var cur = Storage.getCurrentUser();
   var ix = 0;
