@@ -476,9 +476,27 @@ function jiyuuBoxEl() {
   var kumi = document.createElement('input');
   kumi.type = 'text';
   kumi.className = 'jiyuu-kumi';
-  kumi.placeholder = '例 2-1';
   kumi.setAttribute('inputmode', 'numeric');
+  kumi.setAttribute('autocomplete', 'off');
   row.appendChild(kumi);
+
+  // 数字キーボードには「-」「=」が無い（要望2026-09-02）→ 艇番の数字だけ打てば、
+  // 券種に合わせて区切りを自動で入れる（２連単「21」→「2-1」・３連単「213」→「2-1-3」・連複系は「=」）。
+  // 手で「-」「=」や全角数字を打っても、いったん数字だけに戻して同じ形に整える
+  var KUMI_SEP = { '単勝': '', '２連単': '-', '２連複': '=', '拡連複': '=', '３連単': '-', '３連複': '=' };
+  var KUMI_LEN = { '単勝': 1, '２連単': 2, '２連複': 2, '拡連複': 2, '３連単': 3, '３連複': 3 };
+  var KUMI_REI = { '単勝': '1', '２連単': '2-1', '２連複': '2=3', '拡連複': '2=3', '３連単': '2-1-3', '３連複': '1=2=3' };
+  function kumiFormat() {
+    var digits = (kumi.value || '')
+      .replace(/[０-９]/g, function (c) { return String.fromCharCode(c.charCodeAt(0) - 0xFEE0); })
+      .replace(/[^1-6]/g, '')
+      .slice(0, KUMI_LEN[sel.value] || 3);
+    kumi.value = digits.split('').join(KUMI_SEP[sel.value] || '-');
+  }
+  function kumiHint() { kumi.placeholder = '数字だけ 例 ' + (KUMI_REI[sel.value] || '2-1'); }
+  kumi.addEventListener('input', kumiFormat);
+  sel.addEventListener('change', function () { kumiHint(); kumiFormat(); });
+  kumiHint();
 
   var kin = document.createElement('input');
   kin.type = 'number';
