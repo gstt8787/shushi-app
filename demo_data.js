@@ -22,37 +22,55 @@ window.DEMO_RACES = [
         "waku": 1,
         "name": "小野信樹",
         "kyu": "B1",
-        "pt": 10.0
+        "pt": 10.0,
+        "joshi": false,
+        "naka_kyu": "B2",
+        "masu": "そのままB"
       },
       {
         "waku": 2,
         "name": "大場広孝",
         "kyu": "B1",
-        "pt": 42.7
+        "pt": 42.7,
+        "joshi": false,
+        "naka_kyu": "B1",
+        "masu": "そのままB"
       },
       {
         "waku": 3,
         "name": "折下寛法",
         "kyu": "B1",
-        "pt": 37.7
+        "pt": 37.7,
+        "joshi": false,
+        "naka_kyu": "B1",
+        "masu": "そのままB"
       },
       {
         "waku": 4,
         "name": "庄島潤成",
         "kyu": "B1",
-        "pt": 6.2
+        "pt": 6.2,
+        "joshi": false,
+        "naka_kyu": "B2",
+        "masu": "そのままB"
       },
       {
         "waku": 5,
         "name": "今出晋二",
         "kyu": "B1",
-        "pt": 16.5
+        "pt": 16.5,
+        "joshi": false,
+        "naka_kyu": "B2",
+        "masu": "そのままB"
       },
       {
         "waku": 6,
         "name": "中嶋誠一",
         "kyu": "B1",
-        "pt": 43.7
+        "pt": 43.7,
+        "joshi": false,
+        "naka_kyu": "B1",
+        "masu": "そのままB"
       }
     ]
   },
@@ -75,37 +93,55 @@ window.DEMO_RACES = [
         "waku": 1,
         "name": "上田隆章",
         "kyu": "B1",
-        "pt": 26.9
+        "pt": 26.9,
+        "joshi": false,
+        "naka_kyu": "B1",
+        "masu": "そのままB"
       },
       {
         "waku": 2,
         "name": "花本剛",
         "kyu": "B1",
-        "pt": 17.1
+        "pt": 17.1,
+        "joshi": false,
+        "naka_kyu": "B2",
+        "masu": "そのままB"
       },
       {
         "waku": 3,
         "name": "上田洋平",
         "kyu": "B1",
-        "pt": 37.2
+        "pt": 37.2,
+        "joshi": false,
+        "naka_kyu": "B1",
+        "masu": "そのままB"
       },
       {
         "waku": 4,
         "name": "栗原直也",
         "kyu": "B1",
-        "pt": 47.9
+        "pt": 47.9,
+        "joshi": false,
+        "naka_kyu": "B1",
+        "masu": "そのままB"
       },
       {
         "waku": 5,
         "name": "平岡重典",
         "kyu": "B1",
-        "pt": 10.2
+        "pt": 10.2,
+        "joshi": false,
+        "naka_kyu": "B2",
+        "masu": "そのままB"
       },
       {
         "waku": 6,
         "name": "内田壮",
         "kyu": "B1",
-        "pt": 3.1
+        "pt": 3.1,
+        "joshi": false,
+        "naka_kyu": "B2",
+        "masu": "そのままB"
       }
     ]
   },
@@ -128,37 +164,55 @@ window.DEMO_RACES = [
         "waku": 1,
         "name": "西川新太",
         "kyu": "B1",
-        "pt": 51.0
+        "pt": 51.0,
+        "joshi": false,
+        "naka_kyu": "B1",
+        "masu": "そのままB"
       },
       {
         "waku": 2,
         "name": "松尾光広",
         "kyu": "B1",
-        "pt": 28.5
+        "pt": 28.5,
+        "joshi": false,
+        "naka_kyu": "B1",
+        "masu": "そのままB"
       },
       {
         "waku": 3,
         "name": "佐々木大",
         "kyu": "A1",
-        "pt": 88.9
+        "pt": 88.9,
+        "joshi": false,
+        "naka_kyu": "A1",
+        "masu": "本物A"
       },
       {
         "waku": 4,
         "name": "渡邉健",
         "kyu": "B1",
-        "pt": 15.0
+        "pt": 15.0,
+        "joshi": false,
+        "naka_kyu": "B2",
+        "masu": "そのままB"
       },
       {
         "waku": 5,
         "name": "白水勝也",
         "kyu": "A1",
-        "pt": 77.3
+        "pt": 77.3,
+        "joshi": false,
+        "naka_kyu": "A2",
+        "masu": "本物A"
       },
       {
         "waku": 6,
         "name": "近藤稔也",
         "kyu": "B1",
-        "pt": 11.1
+        "pt": 11.1,
+        "joshi": false,
+        "naka_kyu": "B2",
+        "masu": "そのままB"
       }
     ]
   },
@@ -181,37 +235,55 @@ window.DEMO_RACES = [
         "waku": 1,
         "name": "橋口真樹",
         "kyu": "B1",
-        "pt": 28.3
+        "pt": 28.3,
+        "joshi": false,
+        "naka_kyu": "B1",
+        "masu": "そのままB"
       },
       {
         "waku": 2,
         "name": "榮田将彦",
         "kyu": "B1",
-        "pt": 42.9
+        "pt": 42.9,
+        "joshi": false,
+        "naka_kyu": "B1",
+        "masu": "そのままB"
       },
       {
         "waku": 3,
         "name": "竹之内極",
         "kyu": "B1",
-        "pt": 56.4
+        "pt": 56.4,
+        "joshi": false,
+        "naka_kyu": "B1",
+        "masu": "そのままB"
       },
       {
         "waku": 4,
         "name": "天野友和",
         "kyu": "A2",
-        "pt": 65.2
+        "pt": 65.2,
+        "joshi": false,
+        "naka_kyu": "A2",
+        "masu": "本物A"
       },
       {
         "waku": 5,
         "name": "中嶋誠一",
         "kyu": "B1",
-        "pt": 43.7
+        "pt": 43.7,
+        "joshi": false,
+        "naka_kyu": "B1",
+        "masu": "そのままB"
       },
       {
         "waku": 6,
         "name": "茶谷信次",
         "kyu": "A2",
-        "pt": 50.2
+        "pt": 50.2,
+        "joshi": false,
+        "naka_kyu": "B1",
+        "masu": "金メッキ"
       }
     ]
   },
@@ -234,37 +306,55 @@ window.DEMO_RACES = [
         "waku": 1,
         "name": "近藤稔也",
         "kyu": "B1",
-        "pt": 11.1
+        "pt": 11.1,
+        "joshi": false,
+        "naka_kyu": "B2",
+        "masu": "そのままB"
       },
       {
         "waku": 2,
         "name": "今出晋二",
         "kyu": "B1",
-        "pt": 16.5
+        "pt": 16.5,
+        "joshi": false,
+        "naka_kyu": "B2",
+        "masu": "そのままB"
       },
       {
         "waku": 3,
         "name": "栗原直也",
         "kyu": "B1",
-        "pt": 47.9
+        "pt": 47.9,
+        "joshi": false,
+        "naka_kyu": "B1",
+        "masu": "そのままB"
       },
       {
         "waku": 4,
         "name": "折下寛法",
         "kyu": "B1",
-        "pt": 37.7
+        "pt": 37.7,
+        "joshi": false,
+        "naka_kyu": "B1",
+        "masu": "そのままB"
       },
       {
         "waku": 5,
         "name": "花本剛",
         "kyu": "B1",
-        "pt": 17.1
+        "pt": 17.1,
+        "joshi": false,
+        "naka_kyu": "B2",
+        "masu": "そのままB"
       },
       {
         "waku": 6,
         "name": "西川新太",
         "kyu": "B1",
-        "pt": 51.0
+        "pt": 51.0,
+        "joshi": false,
+        "naka_kyu": "B1",
+        "masu": "そのままB"
       }
     ]
   },
@@ -289,37 +379,55 @@ window.DEMO_RACES = [
         "waku": 1,
         "name": "貫地谷直",
         "kyu": "B1",
-        "pt": 4.3
+        "pt": 4.3,
+        "joshi": false,
+        "naka_kyu": "B2",
+        "masu": "そのままB"
       },
       {
         "waku": 2,
         "name": "杉山勝匡",
         "kyu": "B1",
-        "pt": 32.7
+        "pt": 32.7,
+        "joshi": false,
+        "naka_kyu": "B1",
+        "masu": "そのままB"
       },
       {
         "waku": 3,
         "name": "村田敦",
         "kyu": "B1",
-        "pt": 15.2
+        "pt": 15.2,
+        "joshi": false,
+        "naka_kyu": "B2",
+        "masu": "そのままB"
       },
       {
         "waku": 4,
         "name": "阪本勇介",
         "kyu": "B1",
-        "pt": 35.6
+        "pt": 35.6,
+        "joshi": false,
+        "naka_kyu": "B1",
+        "masu": "そのままB"
       },
       {
         "waku": 5,
         "name": "福嶋智之",
         "kyu": "B1",
-        "pt": 26.3
+        "pt": 26.3,
+        "joshi": false,
+        "naka_kyu": "B1",
+        "masu": "そのままB"
       },
       {
         "waku": 6,
         "name": "鈴木茂正",
         "kyu": "B2",
-        "pt": 2.4
+        "pt": 2.4,
+        "joshi": false,
+        "naka_kyu": "B2",
+        "masu": "そのままB"
       }
     ]
   },
@@ -344,37 +452,55 @@ window.DEMO_RACES = [
         "waku": 1,
         "name": "眞崎武蔵",
         "kyu": "B1",
-        "pt": 11.9
+        "pt": 11.9,
+        "joshi": false,
+        "naka_kyu": "B2",
+        "masu": "そのままB"
       },
       {
         "waku": 2,
         "name": "西尾亮輔",
         "kyu": "B1",
-        "pt": 14.9
+        "pt": 14.9,
+        "joshi": false,
+        "naka_kyu": "B2",
+        "masu": "そのままB"
       },
       {
         "waku": 3,
         "name": "岡村将也",
         "kyu": "A2",
-        "pt": 39.5
+        "pt": 39.5,
+        "joshi": false,
+        "naka_kyu": "B1",
+        "masu": "金メッキ"
       },
       {
         "waku": 4,
         "name": "日高龍之",
         "kyu": "B1",
-        "pt": 7.8
+        "pt": 7.8,
+        "joshi": false,
+        "naka_kyu": "B2",
+        "masu": "そのままB"
       },
       {
         "waku": 5,
         "name": "大森翼",
         "kyu": "B1",
-        "pt": 26.6
+        "pt": 26.6,
+        "joshi": false,
+        "naka_kyu": "B1",
+        "masu": "そのままB"
       },
       {
         "waku": 6,
         "name": "石原光",
         "kyu": "B1",
-        "pt": 53.4
+        "pt": 53.4,
+        "joshi": false,
+        "naka_kyu": "B1",
+        "masu": "そのままB"
       }
     ]
   },
@@ -400,37 +526,55 @@ window.DEMO_RACES = [
         "waku": 1,
         "name": "森清友翔",
         "kyu": "B1",
-        "pt": 38.4
+        "pt": 38.4,
+        "joshi": false,
+        "naka_kyu": "B1",
+        "masu": "そのままB"
       },
       {
         "waku": 2,
         "name": "酒井陽祐",
         "kyu": "B1",
-        "pt": 38.7
+        "pt": 38.7,
+        "joshi": false,
+        "naka_kyu": "B1",
+        "masu": "そのままB"
       },
       {
         "waku": 3,
         "name": "金山立樹",
         "kyu": "B1",
-        "pt": 47.0
+        "pt": 47.0,
+        "joshi": false,
+        "naka_kyu": "B1",
+        "masu": "そのままB"
       },
       {
         "waku": 4,
         "name": "高橋直哉",
         "kyu": "B1",
-        "pt": 10.6
+        "pt": 10.6,
+        "joshi": false,
+        "naka_kyu": "B2",
+        "masu": "そのままB"
       },
       {
         "waku": 5,
         "name": "中里英夫",
         "kyu": "B1",
-        "pt": 55.3
+        "pt": 55.3,
+        "joshi": false,
+        "naka_kyu": "B1",
+        "masu": "そのままB"
       },
       {
         "waku": 6,
         "name": "長野壮志",
         "kyu": "A2",
-        "pt": 72.0
+        "pt": 72.0,
+        "joshi": false,
+        "naka_kyu": "A2",
+        "masu": "本物A"
       }
     ]
   },
@@ -455,37 +599,55 @@ window.DEMO_RACES = [
         "waku": 1,
         "name": "相馬翔",
         "kyu": "B1",
-        "pt": 7.5
+        "pt": 7.5,
+        "joshi": false,
+        "naka_kyu": "B2",
+        "masu": "そのままB"
       },
       {
         "waku": 2,
         "name": "長谷川雅",
         "kyu": "B1",
-        "pt": 59.9
+        "pt": 59.9,
+        "joshi": false,
+        "naka_kyu": "A2",
+        "masu": "原石"
       },
       {
         "waku": 3,
         "name": "芦澤望",
         "kyu": "A2",
-        "pt": 56.1
+        "pt": 56.1,
+        "joshi": false,
+        "naka_kyu": "B1",
+        "masu": "金メッキ"
       },
       {
         "waku": 4,
         "name": "東潤樹",
         "kyu": "A2",
-        "pt": 50.5
+        "pt": 50.5,
+        "joshi": false,
+        "naka_kyu": "B1",
+        "masu": "金メッキ"
       },
       {
         "waku": 5,
         "name": "松井貫太",
         "kyu": "B1",
-        "pt": 24.0
+        "pt": 24.0,
+        "joshi": false,
+        "naka_kyu": "B1",
+        "masu": "そのままB"
       },
       {
         "waku": 6,
         "name": "胡本悟志",
         "kyu": "B1",
-        "pt": 15.6
+        "pt": 15.6,
+        "joshi": false,
+        "naka_kyu": "B2",
+        "masu": "そのままB"
       }
     ]
   },
@@ -510,37 +672,55 @@ window.DEMO_RACES = [
         "waku": 1,
         "name": "村田敦",
         "kyu": "B1",
-        "pt": 15.2
+        "pt": 15.2,
+        "joshi": false,
+        "naka_kyu": "B2",
+        "masu": "そのままB"
       },
       {
         "waku": 2,
         "name": "渡邉睦広",
         "kyu": "A2",
-        "pt": 44.5
+        "pt": 44.5,
+        "joshi": false,
+        "naka_kyu": "B1",
+        "masu": "金メッキ"
       },
       {
         "waku": 3,
         "name": "小野勇作",
         "kyu": "B1",
-        "pt": 41.6
+        "pt": 41.6,
+        "joshi": false,
+        "naka_kyu": "B1",
+        "masu": "そのままB"
       },
       {
         "waku": 4,
         "name": "福嶋智之",
         "kyu": "B1",
-        "pt": 26.3
+        "pt": 26.3,
+        "joshi": false,
+        "naka_kyu": "B1",
+        "masu": "そのままB"
       },
       {
         "waku": 5,
         "name": "藤生雄人",
         "kyu": "A2",
-        "pt": 54.8
+        "pt": 54.8,
+        "joshi": false,
+        "naka_kyu": "B1",
+        "masu": "金メッキ"
       },
       {
         "waku": 6,
         "name": "渡修平",
         "kyu": "B1",
-        "pt": 40.6
+        "pt": 40.6,
+        "joshi": false,
+        "naka_kyu": "B1",
+        "masu": "そのままB"
       }
     ]
   },
@@ -565,37 +745,55 @@ window.DEMO_RACES = [
         "waku": 1,
         "name": "大森翼",
         "kyu": "B1",
-        "pt": 26.6
+        "pt": 26.6,
+        "joshi": false,
+        "naka_kyu": "B1",
+        "masu": "そのままB"
       },
       {
         "waku": 2,
         "name": "岡谷健吾",
         "kyu": "B1",
-        "pt": 66.4
+        "pt": 66.4,
+        "joshi": false,
+        "naka_kyu": "A2",
+        "masu": "原石"
       },
       {
         "waku": 3,
         "name": "貫地谷直",
         "kyu": "B1",
-        "pt": 4.3
+        "pt": 4.3,
+        "joshi": false,
+        "naka_kyu": "B2",
+        "masu": "そのままB"
       },
       {
         "waku": 4,
         "name": "長谷川晴",
         "kyu": "A1",
-        "pt": 70.9
+        "pt": 70.9,
+        "joshi": false,
+        "naka_kyu": "A2",
+        "masu": "本物A"
       },
       {
         "waku": 5,
         "name": "日高龍之",
         "kyu": "B1",
-        "pt": 7.8
+        "pt": 7.8,
+        "joshi": false,
+        "naka_kyu": "B2",
+        "masu": "そのままB"
       },
       {
         "waku": 6,
         "name": "長尾章平",
         "kyu": "A1",
-        "pt": 58.4
+        "pt": 58.4,
+        "joshi": false,
+        "naka_kyu": "A2",
+        "masu": "本物A"
       }
     ]
   },
@@ -618,37 +816,55 @@ window.DEMO_RACES = [
         "waku": 1,
         "name": "吉田光",
         "kyu": "B1",
-        "pt": 34.4
+        "pt": 34.4,
+        "joshi": false,
+        "naka_kyu": "B1",
+        "masu": "そのままB"
       },
       {
         "waku": 2,
         "name": "眞鳥章太",
         "kyu": "A2",
-        "pt": 55.7
+        "pt": 55.7,
+        "joshi": false,
+        "naka_kyu": "B1",
+        "masu": "金メッキ"
       },
       {
         "waku": 3,
         "name": "加藤政彦",
         "kyu": "B1",
-        "pt": 69.8
+        "pt": 69.8,
+        "joshi": false,
+        "naka_kyu": "A2",
+        "masu": "原石"
       },
       {
         "waku": 4,
         "name": "宮脇遼太",
         "kyu": "A1",
-        "pt": 80.7
+        "pt": 80.7,
+        "joshi": false,
+        "naka_kyu": "A1",
+        "masu": "本物A"
       },
       {
         "waku": 5,
         "name": "渡辺豊",
         "kyu": "B1",
-        "pt": 16.7
+        "pt": 16.7,
+        "joshi": false,
+        "naka_kyu": "B2",
+        "masu": "そのままB"
       },
       {
         "waku": 6,
         "name": "竹田広樹",
         "kyu": "B1",
-        "pt": 28.1
+        "pt": 28.1,
+        "joshi": false,
+        "naka_kyu": "B1",
+        "masu": "そのままB"
       }
     ]
   },
@@ -671,37 +887,55 @@ window.DEMO_RACES = [
         "waku": 1,
         "name": "前田健太",
         "kyu": "B1",
-        "pt": 27.8
+        "pt": 27.8,
+        "joshi": false,
+        "naka_kyu": "B1",
+        "masu": "そのままB"
       },
       {
         "waku": 2,
         "name": "中渡修作",
         "kyu": "B1",
-        "pt": 47.5
+        "pt": 47.5,
+        "joshi": false,
+        "naka_kyu": "B1",
+        "masu": "そのままB"
       },
       {
         "waku": 3,
         "name": "中島友和",
         "kyu": "B1",
-        "pt": 39.8
+        "pt": 39.8,
+        "joshi": false,
+        "naka_kyu": "B1",
+        "masu": "そのままB"
       },
       {
         "waku": 4,
         "name": "小林礼央",
         "kyu": "B1",
-        "pt": 20.4
+        "pt": 20.4,
+        "joshi": false,
+        "naka_kyu": "B1",
+        "masu": "そのままB"
       },
       {
         "waku": 5,
         "name": "福西広太",
         "kyu": "B1",
-        "pt": 8.5
+        "pt": 8.5,
+        "joshi": false,
+        "naka_kyu": "B2",
+        "masu": "そのままB"
       },
       {
         "waku": 6,
         "name": "西村仁吾",
         "kyu": "B2",
-        "pt": 0.4
+        "pt": 0.4,
+        "joshi": false,
+        "naka_kyu": "B2",
+        "masu": "そのままB"
       }
     ]
   }

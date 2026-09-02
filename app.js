@@ -574,16 +574,22 @@ function renderBetScreen() {
   // 出走6艇の簡易表（誤入力防止: 前日リストと選手名を照合できる。見るだけ・タップ不要）
   if (r.senshu && r.senshu.length) {
     var sbox = el('div', 'senshu-box');
-    sbox.appendChild(el('div', 'senshu-head', '出走6艇（枠・選手・級・実力点）'));
+    sbox.appendChild(el('div', 'senshu-head', '出走6艇（枠・選手・級→中身・実力点）'));
     for (var si = 0; si < r.senshu.length; si++) {
       var sn = r.senshu[si];
       var srow = el('div', 'senshu-row');
       srow.appendChild(el('span', 'kumi-chip tb' + sn.waku, String(sn.waku)));
       srow.appendChild(el('span', 'senshu-name', (sn.name || '—') + (sn.joshi ? '❤️' : '')));
-      srow.appendChild(el('span', 'senshu-kyu', sn.kyu || '—'));
+      // 級→中身: 公式の級と実力換算級のズレ（前日リストと同じ表記。✨原石=中身が上・🎭金メッキ=中身が下）
+      var kyuS = sn.kyu || '—';
+      if (sn.naka_kyu && sn.naka_kyu !== sn.kyu) {
+        kyuS += '→' + sn.naka_kyu + ({ '原石': '✨', '金メッキ': '🎭' }[sn.masu] || '');
+      }
+      srow.appendChild(el('span', 'senshu-kyu', kyuS));
       srow.appendChild(el('span', 'senshu-pt', scoreStr(sn.pt)));
       sbox.appendChild(srow);
     }
+    sbox.appendChild(el('div', 'senshu-legend', '級→中身＝公式の級と実力換算の級のズレ（✨原石=中身が上・🎭金メッキ=中身が下）'));
     card.appendChild(sbox);
   }
   if (r.suisho) { card.appendChild(el('div', 'bet-suisho', '買い目推奨: ' + r.suisho)); }
