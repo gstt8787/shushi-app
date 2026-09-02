@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>締切アラームの登録</title>
+<style>
+  body { font-family: -apple-system, "Hiragino Sans", sans-serif; margin: 0; padding: 24px 16px; background: #f2f4f7; color: #12263a; }
+  .box { background: #fff; border-radius: 14px; padding: 20px; max-width: 480px; margin: 0 auto; }
+  h1 { font-size: 20px; margin: 0 0 12px; }
+  p { line-height: 1.7; margin: 8px 0; }
+  .btn { display: block; text-align: center; background: #12263a; color: #fff; text-decoration: none; font-size: 18px; font-weight: 700; padding: 16px; border-radius: 12px; margin: 16px 0; }
+  ol { padding-left: 22px; line-height: 1.8; }
+  .warn { color: #a33; font-size: 14px; }
+  .note { font-size: 13px; color: #667; }
+  .url { font-size: 11px; word-break: break-all; color: #99a; margin-top: 16px; }
+</style>
+</head>
+<body>
+<div class="box">
+  <h1>⏰ 締切アラームをカレンダーに登録</h1>
+  <p>一度登録すると、毎日のレース締切15分前の通知が自動で入ります。毎日の操作は要りません。</p>
+  <a id="btn" class="btn" href="#">カレンダーに登録する</a>
+  <ol>
+    <li>上のボタンを押す</li>
+    <li>「照会カレンダーを追加しますか？」→「<b>照会</b>」を押す</li>
+    <li>「<b>完了</b>」を押す</li>
+  </ol>
+  <p class="note">登録後の確認: iPhoneの「設定」→「カレンダー」→「アカウント」→「照会カレンダー」→「締切アラーム」を開き、「アラートを削除」が<b>オフ</b>、「取得」が「<b>毎時間</b>」（または自動）になっていれば通知が届きます。</p>
+  <p class="warn" id="err" style="display:none">このページは配信メッセージのリンクから開いてください（登録用の合言葉が付いていません）。</p>
+  <p class="url" id="url"></p>
+</div>
+<script>
+(function () {
+  var t = (location.hash || '').replace(/^#/, '').replace(/[^A-Za-z0-9_-]/g, '');
+  var b = document.getElementById('btn');
+  if (!t) {
+    document.getElementById('err').style.display = 'block';
+    b.style.display = 'none';
+    return;
+  }
+  var u = 'webcal://cxbbehbmpcsnwyooaibx.supabase.co/storage/v1/object/public/alarm-pub/' + t + '/shimekiri.ics';
+  b.href = u;
+  document.getElementById('url').textContent = '登録先: ' + u;
+})();
+</script>
+</body>
+</html>
