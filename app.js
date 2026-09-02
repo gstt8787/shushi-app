@@ -589,6 +589,16 @@ function renderBetScreen() {
     ? el('span', 'tag ' + (m.cls || ''), r.mejirushi)
     : el('span', 'tag tag-outside', 'リスト外'));
   card.appendChild(title);
+  // このレースに自分が既に登録した記録（登録後もこの画面に留まる運用なので、保存済みが一目で分かるように）
+  var meU = Storage.getCurrentUser();
+  var done = Storage.listBets({ userId: meU.id }).filter(function (b) {
+    return b.race_date === r.race_date && b.jcd === r.jcd && Number(b.race_no) === Number(r.race_no);
+  });
+  if (done.length) {
+    card.appendChild(el('div', 'bet-done', '✅ このレースの登録済み: ' + done.map(function (b) {
+      return b.status === '見送り' ? '見送り' : (b.kaikata + ' ' + yen(b.kingaku) + '（' + b.status + '）');
+    }).join('・')));
+  }
   // 出走6艇の簡易表（誤入力防止: 前日リストと選手名を照合できる。見るだけ・タップ不要）
   if (r.senshu && r.senshu.length) {
     var sbox = el('div', 'senshu-box');
@@ -805,14 +815,20 @@ function submitBet() {
     ? '👍 見送りも立派な判断。' + race.jou_name + ' ' + race.race_no + 'R を0円で記録しました'
     : race.jou_name + ' ' + race.race_no + 'R ' + label + ' ' + yen(kin) + ' を登録しました');
 
-  // 画面Aへ戻り収支を即時更新
-  S.tab = 'home';
-  S.inputView = 'race';
-  S.race = null;
+  // 登録後はホームへ戻らず入力タブに留まる（要望2026-09-02: 続けて入力できるように）。
+  // 買った時=同じレースの画面のまま買い方だけ空にする（2件目の買い方や、次のレースへすぐ進める。
+  //   展示チェック票は同じレースなので使い回す）／見送りの時=そのレースは終わりなのでレース一覧へ
+  S.tab = 'input';
   S.kaikata = null;
   S.kaimoku = null;
   S.kingaku = null;
-  S.tenji = null;
+  if (miokuri) {
+    S.inputView = 'race';
+    S.race = null;
+    S.tenji = null;
+  } else {
+    S.inputView = 'bet';
+  }
   renderAll();
   window.scrollTo(0, 0);
 
