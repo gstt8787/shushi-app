@@ -71,7 +71,7 @@ var TENJI_ITEMS = [
 var NOTICE = 'このアプリは記録専用です。土台は全買いで回収率100%未満・買う/見送るは当日の人の判断です';
 
 // 画面Cの固定部品（HTML側にある）。選択中の買い方の直下へ移動して使う
-var BET_FIXED_IDS = ['kingaku-free-row', 'btn-tenji', 'tenji-summary', 'bet-hint', 'kaimoku-total', 'bet-submit'];
+var BET_FIXED_IDS = ['kingaku-free-row', 'btn-tenji', 'tenji-summary', 'kizuki-memo-row', 'bet-hint', 'kaimoku-total', 'bet-submit'];
 
 // ---- 画面の状態 ----
 var S = {
@@ -82,6 +82,7 @@ var S = {
   kaimoku: null,         // 買い目行 [{kumiban, kingaku, checked}]（買い方選択で生成）
   kingaku: null,         // 最後に一括適用したプリセット（ボタンの選択表示用）
   tenji: null,           // 画面Dの回答（登録前の一時保持）
+  memo: '',              // 気付きメモ（要望2026-09-04・展示チェック票の隣・tenji.memo に保存）
   outsideJcd: '01',      // リスト外モーダルの場選択
   kanri: {               // 画面G: 管理（管理者のみ）
     period: 'week',      // today / week / month / all
@@ -355,14 +356,30 @@ function openBetScreen(race) {
   S.kaimoku = null;
   S.kingaku = null;
   S.tenji = null;
+  S.memo = '';
   S.tab = 'input';
   S.inputView = 'bet';
   $('kingaku-custom').value = '';
+  $('kizuki-memo').value = '';
   renderAll();
   window.scrollTo(0, 0);
 }
 
 function tenjiMiokuri() { return !!(S.tenji && S.tenji.q6 === '見送る'); }
+
+// 展示チェック票の回答＋気付きメモを1つにまとめて保存部品へ渡す（どちらも空なら null＝付けない）
+function tenjiWithMemo() {
+  var t = null;
+  if (S.tenji) {
+    t = {};
+    for (var k in S.tenji) {
+      if (Object.prototype.hasOwnProperty.call(S.tenji, k) && S.tenji[k]) { t[k] = S.tenji[k]; }
+    }
+  }
+  var m = (S.memo || '').trim();
+  if (m) { t = t || {}; t.memo = m.slice(0, 300); }
+  return t;
+}
 
 function findKaikata(id) {
   for (var i = 0; i < KAIKATA.length; i++) {
@@ -710,6 +727,8 @@ function renderBetScreen() {
   } else {
     tSum.classList.add('hidden');
   }
+  // 気付きメモ欄は S.memo が正（画面の作り直しで消えないように）
+  if ($('kizuki-memo').value !== (S.memo || '')) { $('kizuki-memo').value = S.memo || ''; }
 
   // 合計バー（○点 ○○円）と登録ボタンの状態
   updateBetFooter();
@@ -804,7 +823,7 @@ function submitBet() {
     kingaku: kin,
     kaimoku: kaimoku,
     status: miokuri ? '見送り' : '結果待ち'
-  }, S.tenji);
+  }, tenjiWithMemo());
 
   // チェックを外して点数が変わった時はラベルに実点数を添える
   var label = kkName;
@@ -826,6 +845,8 @@ function submitBet() {
     S.inputView = 'race';
     S.race = null;
     S.tenji = null;
+    S.memo = '';
+    $('kizuki-memo').value = '';
   } else {
     S.inputView = 'bet';
   }
@@ -1028,8 +1049,11 @@ function renderKiroku() {
       title.appendChild(el('span', 'user-chip' + (mine ? ' me' : ''), owner ? owner.name : b.user_id));
     }
     main.appendChild(title);
+    var tj = Storage.getTenji(b.id);
+    var tjAny = !!(tj && (tj.q1 || tj.q2 || tj.q3 || tj.q4 || tj.q5 || tj.q6));
     main.appendChild(el('div', 'kiroku-sub',
-      b.race_date + '　購入 ' + yen(b.kingaku) + (Storage.getTenji(b.id) ? '　📋チェック票あり' : '')));
+      b.race_date + '　購入 ' + yen(b.kingaku) + (tjAny ? '　📋チェック票あり' : '')));
+    if (tj && tj.memo) { main.appendChild(el('div', 'kiroku-memo', '📝 ' + tj.memo)); }
     // 買い目内訳（2026-09-01改良の新形式のみ。旧記録＝kaimoku無しでは出さない。
     // 自由買い目行は券種名を添えて区別する。例: ２連単2-1:300円）
     if (b.kaimoku && b.kaimoku.length) {
@@ -1466,6 +1490,7 @@ function switchUser() {
   S.kaimoku = null;
   S.kingaku = null;
   S.tenji = null;
+  S.memo = '';
   renderAll();
 }
 
@@ -1507,6 +1532,7 @@ function init() {
   $('btn-tenji').addEventListener('click', openTenjiModal);
   $('tenji-skip').addEventListener('click', closeTenjiModal);
   $('tenji-apply').addEventListener('click', applyTenji);
+  $('kizuki-memo').addEventListener('input', function () { S.memo = this.value; });
   $('btn-outside').addEventListener('click', openOutsideModal);
   $('outside-close').addEventListener('click', function () { $('outside-modal').classList.add('hidden'); });
   $('kingaku-custom').addEventListener('input', function () {

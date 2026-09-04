@@ -134,7 +134,18 @@
         if (res.error) { writeFailed(res.error, '記録の追加'); return; }
         if (t) {
           sb.from('tenji').insert(t).then(function (res2) {
-            if (res2.error) { writeFailed(res2.error, '展示チェック票'); }
+            if (!res2.error) { return; }
+            // 倉庫に memo 列がまだ無い時（列追加のSQL前）はメモだけ落として本体を保存する
+            if (t.memo && /memo/.test(String(res2.error.message || ''))) {
+              var t2 = {};
+              for (var k2 in t) { if (Object.prototype.hasOwnProperty.call(t, k2) && k2 !== 'memo') { t2[k2] = t[k2]; } }
+              sb.from('tenji').insert(t2).then(function (res3) {
+                if (res3.error) { writeFailed(res3.error, '展示チェック票'); return; }
+                alert('📝 気付きメモは保存できませんでした（倉庫に memo 列が未追加）。チェック票は保存済みです');
+              });
+              return;
+            }
+            writeFailed(res2.error, '展示チェック票');
           });
         }
       });
